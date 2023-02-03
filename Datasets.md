@@ -13,3 +13,6 @@
     * [Code](https://github.com/iskander-akhmetov/Topic-Aware-Sentiment-Analysis-of-News-Articles/blob/main/Topic%20classification%20and%20sentiment%20analysis%20models%20v.2.ipynb)
 * [Sentiment Annotated Dataset of Croatian News](https://www.clarin.si/repository/xmlui/handle/11356/1342)
 * [Manually sentiment annotated Slovenian news corpus SentiNews 1.0](https://www.clarin.si/repository/xmlui/handle/11356/1110)
+* [Sentiment-Analysis-of-News-Headlines-Using-Simple-Transformers: Release of Dataset of News Headlines](https://zenodo.org/record/6538092#.Y9zcyC-l3RY)
+* [A Million News Headlines](https://www.kaggle.com/datasets/therohk/million-headlines)
+* [All the news](https://www.kaggle.com/datasets/snapcrack/all-the-news)
