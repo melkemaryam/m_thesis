@@ -9,4 +9,7 @@
 * [Dutch covid news headlines sentiment analysis](https://figshare.com/articles/dataset/Dutch_covid_news_headlines_sentiment_analysis/19154102)
 * [News Sentiment Analysis](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/8XBCUF)
 * [Sentiment Analysis for Financial News](https://www.kaggle.com/datasets/ankurzing/sentiment-analysis-for-financial-news/code)
-* 
+* [Topic-aware sentiment analysis](https://data.mendeley.com/datasets/m4ndy7tcss)
+    * [Code](https://github.com/iskander-akhmetov/Topic-Aware-Sentiment-Analysis-of-News-Articles/blob/main/Topic%20classification%20and%20sentiment%20analysis%20models%20v.2.ipynb)
+* [Sentiment Annotated Dataset of Croatian News](https://www.clarin.si/repository/xmlui/handle/11356/1342)
+* [Manually sentiment annotated Slovenian news corpus SentiNews 1.0](https://www.clarin.si/repository/xmlui/handle/11356/1110)

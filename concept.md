@@ -30,6 +30,11 @@ Once the classifier is ready, further features can be added, such as:
     * i.e. what one person in one country might deem as positive, another person in another country might not.
     * different ethnic backgrounds, beliefs, genders, societal and monetary aspects all influence the perception of "good"/"bad" news
 
+## Annotations
+
+* Like [Sentiment Annotated Dataset of Croatian News](https://www.clarin.si/repository/xmlui/handle/11356/1342)
+    * using a five-level Likert scale (1—very negative, 2—negative, 3—neutral, 4—positive, and 5—very positive)
+
 ## Literature
 
 ### On sentiment analysis in social media/news:
