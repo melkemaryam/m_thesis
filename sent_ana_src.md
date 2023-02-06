@@ -14,4 +14,4 @@
 * [A. Singh and G. Jain, "Sentiment Analysis of News Headlines Using Simple Transformers," 2021 Asian Conference on Innovation in Technology (ASIANCON), PUNE, India, 2021, pp. 1-6, doi: 10.1109/ASIANCON51346.2021.9544806.](https://ieeexplore.ieee.org/document/9544806)
 * [Taj, Soonh & Meghji, Areej & Shaikh, Baby. (2019). Sentiment Analysis of News Articles: A Lexicon based Approach. 10.1109/ICOMET.2019.8673428. ](https://www.researchgate.net/publication/330880816_Sentiment_Analysis_of_News_Articles_A_Lexicon_based_Approach)
 * [Akhmetov, Iskander & Gelbukh, Alexander & Mussabayev, Rustam. (2022). Topic-Aware Sentiment Analysis of News Articles. Computacion y Sistemas. 26. 423-439. 10.13053/CyS-26-1-4179. ](https://www.researchgate.net/publication/359717659_Topic-Aware_Sentiment_Analysis_of_News_Articles)
-* 
+* [Lori Young & Stuart Soroka (2012) Affective News: The Automated Coding of Sentiment in Political Texts, Political Communication, 29:2, 205-231, DOI: 10.1080/10584609.2012.671234](https://www.tandfonline.com/doi/full/10.1080/10584609.2012.671234?scroll=top&needAccess=true&role=tab)

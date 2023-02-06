@@ -6,3 +6,4 @@
 * [Stock Sentiment Analysis using News Headlines](https://medium.com/different-types-of-activation-functions-in-a/stock-sentiment-analysis-using-news-headlines-926bcd9d6d2e)
 * [Headlines and Congressional Twitter: Sentiment and Topic Analysis](https://towardsdatascience.com/headline-and-twitter-data-based-sentiment-and-topic-analysis-c539f188fe5b)
 * [NLP Implementation – Topic Modelling And Sentiment Analysis On News Articles (Sentence Level)](https://ryanong.co.uk/2020/08/29/day-242-nlp-implementation-topic-modelling-and-sentiment-analysis-on-news-articles-sentence-level/)
+* 
