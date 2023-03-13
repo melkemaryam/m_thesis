@@ -20,4 +20,11 @@
 * [Dataset: Sentiment Analysis annotation of News headlines covering the Olympic legacy of Rio 2016 and London 2012 published by the Brazilian and British online media](https://zenodo.org/record/6323964#.Y90DWi-l3RY)
 * [Sentiment Analysis outputs based on the combination of three classifiers for news headlines and body text](https://zenodo.org/record/6326348#.Y90Dpy-l3RY)
 * [Google News - news headlines](https://getdata.io/data-sources/4873-google-news-news-headlines#data-harvested)
+
+
+# Unlabelled News
+
+* [Harvard - News Articles](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/GMFCTR)
+* [RealNews](https://github.com/rowanz/grover/tree/master/realnews)
+* [Kaggle News Articles](https://www.kaggle.com/datasets/sbhatti/news-articles-corpus?select=data)
 * 
