@@ -15,4 +15,5 @@
 * [The Happy Broadcast](https://www.thehappybroadcast.com)
 * [Reddit: Uplifting News](https://www.reddit.com/r/UpliftingNews/)
 * [Jane Goodall's Good For All News](https://news.janegoodall.org)
-* 
+* [The Optimist Daily](https://www.optimistdaily.com/)
+* [Global Good News](https://www.globalgoodnews.com/)
