@@ -1,3 +1,4 @@
+# Thesis Proposal
 
 School of Electronic Engineering and Computer Science
 
@@ -26,7 +27,7 @@ PROJECT AIMS:
 
 State the design, development or research challenge (problem) that the project aims to solve.
 
-[[Project Aims]]
+[[project_aims]]
   
   
   
@@ -40,7 +41,7 @@ PROJECT OBJECTIVES:
 
 List a series of objectives you need to achieve in order to fulfil the aims of your project.
 
-[[Project Objectives]]
+[[project_objectives]]
   
   
   
