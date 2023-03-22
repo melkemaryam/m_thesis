@@ -63,7 +63,7 @@ METHODOLOGY:
 
 Describe the various steps that you intend to follow in order for you to achieve your project aims.
 
-[[Methodology]]
+[[project_methodology]]
 
   
   
