@@ -4,7 +4,7 @@
 
 ![](thesis_overview.png)
 
-The above imgae shows the general methodology regarding the final framework.
+The above image shows the general methodology regarding the final framework.
 
 1. Review and analyse the current state-of-the-art methods
 2. Annotate the dataset, which contains various kinds of news, to allow for a diverse dataset
@@ -14,8 +14,8 @@ The above imgae shows the general methodology regarding the final framework.
 6. Compare the results with different datasets
 7. Create a pipeline to automate these processes and put everything together as a framework for future work
 
-The above steps leave room for further possible extensions, if time and resources allow itL
-1. add news articles in other languages than English to teh dataset
+The above steps leave room for further possible extensions, if time and resources allow it:
+1. add news articles in other languages than English to the dataset
 2. let Chat-GPT annotate the dataset
 
 Justification:
