@@ -78,7 +78,7 @@ PROJECT MILESTONES
 
 Indicate what measurable/tangible components you will produce as part of this project.  This may take the form of deliverable document(s) or developmental milestones such as a working piece of software/hardware. 
 
-[[Project Milestones]]
+[[project_milestones]]
   
   
   
@@ -92,7 +92,7 @@ REQUIRED KNOWLEDGE/ SKILLS/TOOLS/RESOURCES:
 
 Indicate as far as possible the skills that are required for you to undertake this project.  Also include any software, hardware or other tools or resources that you believe you will need.
 
-[[Requirements]]
+[[requirements]]
 
   
   
