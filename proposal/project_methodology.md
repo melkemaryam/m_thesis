@@ -17,6 +17,8 @@ The above image shows the general methodology regarding the final framework.
 The above steps leave room for further possible extensions, if time and resources allow it:
 1. add news articles in other languages than English to the dataset
 2. let Chat-GPT annotate the dataset
+3. automate the entire annotation process
+4. add noise to the dataset by rephrasing headlines/content, for example using Chat-GPT
 
 Justification:
 - In order to use classifiers in applications, they need to undergo certain training and testing stages to ensure safety and quality

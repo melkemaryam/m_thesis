@@ -8,12 +8,12 @@
         "type": "tabs",
         "children": [
           {
-            "id": "f247b6b4c6eb0bc8",
+            "id": "bd8a6c4544d902cd",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "proposal/thesis_proposal.md",
+                "file": "proposal/project_milestones.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "proposal/thesis_proposal.md",
+                "file": "proposal/project_milestones.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "proposal/thesis_proposal.md",
+                "file": "proposal/project_milestones.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "proposal/thesis_proposal.md"
+                "file": "proposal/project_milestones.md"
               }
             }
           }
@@ -146,6 +146,31 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "f247b6b4c6eb0bc8",
-  "lastOpenFiles": []
+  "active": "bd8a6c4544d902cd",
+  "lastOpenFiles": [
+    "proposal/project_methodology.md",
+    "proposal/project_objectives.md",
+    "proposal/project_aims.md",
+    "proposal/requirements.md",
+    "proposal/thesis_overview.png",
+    "proposal/thesis_proposal.md",
+    "proposal/project_milestones.md",
+    "papers/sent_ana_src.md",
+    "concept.md",
+    "Datasets.md",
+    "news_platforms.md",
+    "README.md",
+    "Test/Test file (1).md",
+    "Test/Test file.md",
+    "code_examples.md",
+    "Test",
+    "Test/new test.md",
+    "Test/Text file.md",
+    "It worked/take two.md",
+    "It worked/Hellos guy /interesting.md",
+    "It worked/Hellos guy ",
+    "It worked/untitled folder",
+    "meeting notes/20230215-meeting.md",
+    "It worked"
+  ]
 }
