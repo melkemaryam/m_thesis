@@ -13,13 +13,38 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "proposal/project_milestones.md",
+                "file": "meeting notes/20230215-meeting.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "a3ac23922b5532db",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "resources/news_platforms.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "10b47c0cac2556f5",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "resources/models.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -85,7 +110,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "proposal/project_milestones.md",
+                "file": "resources/models.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +127,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "proposal/project_milestones.md",
+                "file": "resources/models.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +150,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "proposal/project_milestones.md"
+                "file": "resources/models.md"
               }
             }
           }
@@ -146,25 +171,29 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "bd8a6c4544d902cd",
+  "active": "10b47c0cac2556f5",
   "lastOpenFiles": [
-    "Project_Definition_Hannah_Claus.pdf",
+    "resources/news_platforms.md",
+    "resources/models.md",
+    "resources",
+    "resources/Datasets.md",
+    "proposal/concept.md",
+    "resources/code_examples.md",
+    "proposal/thesis_proposal.md",
+    "proposal/thesis_overview.png",
+    "proposal/Project_Definition_Hannah_Claus.pdf",
+    "meeting notes/20230323-meeting.md",
+    "meeting notes/20230215-meeting.md",
+    "proposal/project_milestones.md",
     "proposal/Project Definition Pro Forma.docx",
     "proposal/project_methodology.md",
     "proposal/project_objectives.md",
     "proposal/project_aims.md",
     "proposal/requirements.md",
-    "proposal/thesis_overview.png",
-    "proposal/thesis_proposal.md",
-    "proposal/project_milestones.md",
     "papers/sent_ana_src.md",
-    "concept.md",
-    "Datasets.md",
-    "news_platforms.md",
     "README.md",
     "Test/Test file (1).md",
     "Test/Test file.md",
-    "code_examples.md",
     "Test",
     "Test/new test.md",
     "Test/Text file.md",
@@ -172,7 +201,6 @@
     "It worked/Hellos guy /interesting.md",
     "It worked/Hellos guy ",
     "It worked/untitled folder",
-    "meeting notes/20230215-meeting.md",
     "It worked"
   ]
 }
