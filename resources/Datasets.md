@@ -27,4 +27,8 @@
 * [Harvard - News Articles](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/GMFCTR)
 * [RealNews](https://github.com/rowanz/grover/tree/master/realnews)
 * [Kaggle News Articles](https://www.kaggle.com/datasets/sbhatti/news-articles-corpus?select=data)
+
+# Scraping News:
+
+* [Scraping News and Articles From Public APIs with Python](https://towardsdatascience.com/scraping-news-and-articles-from-public-apis-with-python-be84521d85b9)
 * 
