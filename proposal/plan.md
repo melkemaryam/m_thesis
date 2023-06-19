@@ -2,6 +2,9 @@
 
 ## 1. Find the most efficient way to label data
 * try Snorkel
+* ![](label.png)
+* image taken from: [Predicting News Article Sentiment Using Natural Language Processing — Part 1](https://cjlee-data.medium.com/predicting-news-article-sentiment-using-natural-language-processing-part-1-27ef1e33ba3b)
+* 
 
 ## 2. Sentiment Analysis on News Headlines, English
 * Combine ideas from example codes [[code_examples]]
