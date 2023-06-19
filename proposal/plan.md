@@ -29,3 +29,4 @@
 
 ## 7. If time:
 * add German news
+* extend to Tweets, see: [Getting Started with Sentiment Analysis using Python](https://huggingface.co/blog/sentiment-analysis-python)
