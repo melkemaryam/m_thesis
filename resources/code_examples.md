@@ -15,4 +15,13 @@
 * [Introduction to News Sentiment Analysis with Eikon Data APIs - a Python example](https://developers.refinitiv.com/en/article-catalog/article/introduction-news-sentiment-analysis-eikon-data-apis-python-example)
 * [Stock News Sentiment Analysis with Python with 50 lines of code](https://medium.com/higherpattern/stock-news-sentiment-analysis-with-python-with-50-lines-of-code-e2a1519578a1)
 * [Getting Started with Sentiment Analysis using Python](https://huggingface.co/blog/sentiment-analysis-python)
+* [News Headline Sentiment Analysis | NLP](https://www.kaggle.com/code/sujithmandala/news-headline-sentiment-analysis-nlp)
+* [Sarcastic Headlines Detector ~ LSTM](https://www.kaggle.com/code/eisgandar/sarcastic-headlines-detector-lstm)
+* [Exploring Internet News Headlines](https://www.kaggle.com/code/thomaskonstantin/exploring-internet-news-headlines)
+* [Sentiment Analysis Using News Headlines](https://www.kaggle.com/code/aryanml007/sentiment-analysis-using-news-headlines/notebook)
+* [March 2018 NYT Headline Click Bait](https://www.kaggle.com/code/jaseziv83/march-2018-nyt-headline-click-bait)
+* [Analysis of A Million News Headlines](https://www.kaggle.com/code/richel145/analysis-of-a-million-news-headlines)
+* [Twitter Sentiment Analysis LSTM](https://www.kaggle.com/code/kritanjalijain/twitter-sentiment-analysis-lstm)
+* [Text Classification Financial News](https://www.kaggle.com/code/shivamburnwal/text-classification-financial-news)
+* [Topic-Aware-Sentiment-Analysis-of-News-Articles](https://github.com/iskander-akhmetov/Topic-Aware-Sentiment-Analysis-of-News-Articles/blob/main/Topic%20classification%20and%20sentiment%20analysis%20models%20v.2.ipynb)
 * 
