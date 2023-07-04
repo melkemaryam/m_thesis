@@ -12,7 +12,6 @@ import io
 
 #Supervised learning
 from tqdm import tqdm_notebook as tqdm
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.linear_model import LogisticRegression
@@ -20,9 +19,9 @@ from sklearn.metrics import classification_report
 
 ##Deep learning libraries and APIs
 import numpy as np
-#import tensorflow as tf
-#from tensorflow.keras.preprocessing.text import Tokenizer
-#from tensorflow.keras.preprocessing.sequence import pad_sequences
+import tensorflow as tf
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 ## Machine Learning Algorithms
 from sklearn.feature_extraction.text import CountVectorizer
@@ -47,6 +46,10 @@ from sklearn.pipeline import Pipeline
 
 from read_data import Read_data
 from helper import Helper
+
+import matplotlib.pyplot as plt
+from sklearn.model_selection import LearningCurveDisplay, learning_curve
+
 
 class Build_model():
 
@@ -137,8 +140,8 @@ class Build_model():
 				else:
 					v_test.append(np.zeros(100, dtype=float))
 
-			v_train = v_train.toarray()
-			v_test = v_test.toarray()
+			#v_train = v_train.toarray()
+			#v_test = v_test.toarray()
 
 			return words, v_train, v_test
 
@@ -154,17 +157,21 @@ class Build_model():
 	def boost_model(self, data, model):
 
 		boosting = AdaBoostClassifier(estimator = model, n_estimators = 1, learning_rate = 1, random_state = 42)
-		boosting, vector, train_score, test_score = self.build_train(data, boosting)
+		h = Helper()
+		h.write_report("Boosting")
+		op = 'boost'
+		boosting, vector, train_score, test_score = self.build_train(data, boosting, op)
 
 		return boosting, vector, train_score, test_score
 
-	def build_train(self, data, model):
+	def build_train(self, data, model, op = 'normal'):
 
 		re = Read_data()
 		h = Helper()
 
 		# train the network
 		print("[INFO] training network...")
+		h.write_report(f"The size of this dataset is %.1f" % len(data))
 
 		X_train, X_test, y_train, y_test = re.train_test_data(data)
 		vector, v_train, v_test = self.get_vector(X_train, X_test)
@@ -176,15 +183,13 @@ class Build_model():
 		prob = model.predict_proba(v_test)
 		test_score = accuracy_score(y_test, pred)
 		labels = h.get_labels()
-		#report = classification_report(v_test, pred, target_names=labels)
+
+		report = classification_report(y_test, pred, target_names=labels)
 		self.write_score(train_score, test_score)
-
-		#print(report)
-		#h.write_report(report)
-
-		#_, acc = model.evaluate(X_test, y_test, verbose=0)
-		#print('> %.3f' % (acc * 100.0))
-		#h.write_report('> %.3f' % (acc * 100.0))
+		print(report)
+		h.write_report(report)
+		h.plot_acc(model, v_train, y_train, op)
+		h.plot_loss(model)
 
 		return model, vector, train_score, test_score
 
@@ -192,13 +197,17 @@ class Build_model():
 
 		arg = Args()
 		args = arg.parse_arguments()
+		h = Helper()
 
 		m_name = args["model"]
 		v_name = args["vector"]
 
 		print(f"\nShowing results for {v_name} and {m_name} Model")
+		h.write_report(f"\nShowing results for {v_name} and {m_name} Model")
 		print(f"Training Accuarcy: %.3f" % train_score)
+		h.write_report(f"Training Accuarcy: %.3f" % train_score)
 		print('Test Accuracy %.3f' % test_score)
+		h.write_report('Test Accuracy %.3f' % test_score)
 
 
 

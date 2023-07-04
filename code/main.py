@@ -29,7 +29,10 @@ if __name__ == '__main__':
 		data = re.return_data()
 			
 		model, vector, tain_score, test_score = bu.build_net(data)
-		boosting, vector, train_score, test_score = bu.boost_model(data, model)
+
+		if (args["optimiser"] == 'boost'):
+
+			boosting, vector, train_score, test_score = bu.boost_model(data, model)
 
 	except KeyboardInterrupt:
 		pass

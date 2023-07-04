@@ -26,7 +26,7 @@ class Read_data():
 
 		data.fillna('', inplace=True)
 		data.drop(columns = ['Unnamed: 0'], inplace=True)
-		data = data.iloc[:10000]
+		data = data.iloc[:100000]
 
 		return data
 
