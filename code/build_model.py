@@ -20,9 +20,9 @@ from sklearn.metrics import classification_report
 
 ##Deep learning libraries and APIs
 import numpy as np
-import tensorflow as tf
-from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.preprocessing.sequence import pad_sequences
+#import tensorflow as tf
+#from tensorflow.keras.preprocessing.text import Tokenizer
+#from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 ## Machine Learning Algorithms
 from sklearn.feature_extraction.text import CountVectorizer
@@ -45,45 +45,44 @@ from sklearn.decomposition import PCA
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.pipeline import Pipeline
 
+from read_data import Read_data
+from helper import Helper
+
 class Build_model():
 
 	def __init__(self, model):
 
 		self.model = model
 
-	def get_model(self, C):
+	def get_model(self):
 
 		arg = Args()
 		args = arg.parse_arguments()
+		C = 1
 
 		# train with logistic regression
 		if (args["model"] == 'log'):
 
 			# create logistic regression model 
-			self.model = LogisticRegression(n_jobs=1, C = C, max_iter = 1000, class_weight="balanced")
-			m_name = 'log'
+			model = LogisticRegression(n_jobs=1, C = C, max_iter = 1000, class_weight="balanced")
 
-			return self.model, m_name
+			return model
 
 		# train with support vector machine
 		elif (args["model"] == 'svm'):
 			
 			# create support vector classifier
-			self.model = SVC(kernel='linear', probability=True, C = C, gamma = "auto")
+			model = SVC(kernel='linear', probability=True, C = C, gamma = "auto")
 
-			m_name = 'svm'
-
-			return self.model, m_name
+			return model
 
 		# train with naive bayes
 		elif (args["model"] == 'nb'):
 			
 			# create gaussian naive bayes
-			self.model = GaussianNB()
+			model = GaussianNB()
 
-			m_name = 'nb'
-
-			return self.model, m_name
+			return model
 
 	def get_vector(self, X_train, X_test):
 
@@ -96,9 +95,8 @@ class Build_model():
 			vector = TfidfVectorizer(max_features=1000, ngram_range=(1, 1))
 			v_train = vector.fit_transform(X_train.values.tolist())
 			v_test = vector.transform(X_test)
-			v_name = 'tfidf'
 
-			return vector, v_train, v_test, v_name
+			return vector, v_train, v_test
 
 		# get count vectoriser
 		elif (args["vector"] == 'count'):
@@ -106,9 +104,8 @@ class Build_model():
 			vector = CountVectorizer(max_features=1000, ngram_range=(1, 1))
 			v_train = vector.fit_transform(X_train.values.tolist())
 			v_test = vector.transform(X_test)
-			v_name = 'count'
-
-			return vector, v_train, v_test, v_name
+			
+			return vector, v_train, v_test
 
 		# train without optimisation
 		elif (args["vector"] == 'w2v'):
@@ -140,108 +137,68 @@ class Build_model():
 				else:
 					v_test.append(np.zeros(100, dtype=float))
 
-			v_name = 'w2v'
+			v_train = v_train.toarray()
+			v_test = v_test.toarray()
 
-			return words, v_train, v_test, v_name
-
+			return words, v_train, v_test
 
 	def build_net(self, data):
 
-		C = 1
-
-		# Features and Labels
-		X = data['tokenised']
-		y = data['agg_label']
-		X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)
-
 		# create a classifier 
-		self.model, m_name = self.get_model(C)
+		model = self.get_model()
+		model, vector, train_score, test_score = self.build_train(data, model)
 
-		vector, v_train, v_test, v_name = self.get_vector(X_train, X_test)
-
-		if v_name == 'w2v':
-
-			self.model.fit(v_train, y_train)
-			train_score = self.model.score(v_train, y_train)
-
-			pred = self.model.predict(v_test)
-			prob = self.model.predict_proba(v_test)
-
-		else:
-
-			self.model.fit(v_train.toarray(), y_train)
-			train_score = self.model.score(v_train.toarray(), y_train)
-
-			pred = self.model.predict(v_test.toarray())
-			prob = self.model.predict_proba(v_test.toarray())
-
-		test_score = accuracy_score(y_test, pred)
-
-		print(f"\nShowing results for {v_name} and {m_name} Model, C = {C}")
-		print(f"Training Accuarcy: %.3f" % train_score)
-		print('Test Accuracy %.3f' % test_score)
-
-		return round(train_score, 3), round(test_score, 3), self.model, vector
+		return model, vector, train_score, test_score
 
 
 	def boost_model(self, data, model):
 
+		boosting = AdaBoostClassifier(estimator = model, n_estimators = 1, learning_rate = 1, random_state = 42)
+		boosting, vector, train_score, test_score = self.build_train(data, boosting)
+
+		return boosting, vector, train_score, test_score
+
+	def build_train(self, data, model):
+
+		re = Read_data()
+		h = Helper()
+
+		# train the network
+		print("[INFO] training network...")
+
+		X_train, X_test, y_train, y_test = re.train_test_data(data)
+		vector, v_train, v_test = self.get_vector(X_train, X_test)
+
+		model.fit(v_train, y_train)
+		train_score = model.score(v_train, y_train)
+
+		pred = model.predict(v_test)
+		prob = model.predict_proba(v_test)
+		test_score = accuracy_score(y_test, pred)
+		labels = h.get_labels()
+		#report = classification_report(v_test, pred, target_names=labels)
+		self.write_score(train_score, test_score)
+
+		#print(report)
+		#h.write_report(report)
+
+		#_, acc = model.evaluate(X_test, y_test, verbose=0)
+		#print('> %.3f' % (acc * 100.0))
+		#h.write_report('> %.3f' % (acc * 100.0))
+
+		return model, vector, train_score, test_score
+
+	def write_score(self, train_score, test_score):
+
 		arg = Args()
 		args = arg.parse_arguments()
 
-		C = 1
-
 		m_name = args["model"]
+		v_name = args["vector"]
 
-		# Features and Labels
-		X = data['tokenised']
-		y = data['agg_label']
-		X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)
-
-		vector, v_train, v_test, v_name = self.get_vector(X_train, X_test)
-
-		boosting = AdaBoostClassifier(estimator = self.model, 
-										n_estimators = 1, 
-										learning_rate = 1, 
-										random_state = 42)   
-
-		if v_name == 'w2v':
-
-			boosting.fit(v_train, y_train)
-			train_score = boosting.score(v_train, y_train)
-
-			pred = boosting.predict(v_test)
-			prob = boosting.predict_proba(v_test)
-
-		else:
-
-			boosting.fit(v_train.toarray(), y_train)
-			train_score = boosting.score(v_train.toarray(), y_train)
-
-			pred = boosting.predict(v_test.toarray())
-			prob = boosting.predict_proba(v_test.toarray())
-
-			
-	    
-		test_score = accuracy_score(y_test, pred)
-	    
-		print(f"\nShowing results for {v_name} and {m_name} Model, C = {C}")
+		print(f"\nShowing results for {v_name} and {m_name} Model")
 		print(f"Training Accuarcy: %.3f" % train_score)
 		print('Test Accuracy %.3f' % test_score)
-
-		return train_score, test_score, boosting
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

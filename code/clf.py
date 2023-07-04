@@ -1,5 +1,5 @@
-# create venv python3 -m venv my_env
-# start venv source my_env/bin/activate
+# create venv python3 -m venv venvo
+# start venv source venvo/bin/activate
 # 
 
 # pandas and numpy
@@ -73,8 +73,8 @@ from sklearn.metrics import classification_report
 ##Deep learning libraries and APIs
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.preprocessing.sequence import pad_sequences
+#from tensorflow.keras.preprocessing.text import Tokenizer
+#from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 ## Machine Learning Algorithms
 from sklearn.feature_extraction.text import CountVectorizer
