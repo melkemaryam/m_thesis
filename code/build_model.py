@@ -99,6 +99,11 @@ class Build_model():
 			v_train = vector.fit_transform(X_train.values.tolist())
 			v_test = vector.transform(X_test)
 
+			if (args["model"] == 'nb'):
+
+				v_train = v_train.toarray()
+				v_test = v_test.toarray()
+
 			return vector, v_train, v_test
 
 		# get count vectoriser
@@ -107,6 +112,11 @@ class Build_model():
 			vector = CountVectorizer(max_features=1000, ngram_range=(1, 1))
 			v_train = vector.fit_transform(X_train.values.tolist())
 			v_test = vector.transform(X_test)
+
+			if (args["model"] == 'nb'):
+
+				v_train = v_train.toarray()
+				v_test = v_test.toarray()
 			
 			return vector, v_train, v_test
 
@@ -139,9 +149,6 @@ class Build_model():
 					v_test.append(v.mean(axis=0))
 				else:
 					v_test.append(np.zeros(100, dtype=float))
-
-			#v_train = v_train.toarray()
-			#v_test = v_test.toarray()
 
 			return words, v_train, v_test
 
