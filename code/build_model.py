@@ -59,6 +59,7 @@ class Build_model():
 
 	def get_model(self):
 
+		# get arguments
 		arg = Args()
 		args = arg.parse_arguments()
 		C = 1
@@ -89,16 +90,19 @@ class Build_model():
 
 	def get_vector(self, X_train, X_test):
 
+		# get arguments
 		arg = Args()
 		args = arg.parse_arguments()
 
 		# get tfidf
 		if (args["vector"] == 'tfidf'):
 			
+			# create tfidf vector
 			vector = TfidfVectorizer(max_features=1000, ngram_range=(1, 1))
 			v_train = vector.fit_transform(X_train.values.tolist())
 			v_test = vector.transform(X_test)
 
+			# change type to array if model is naive bayes
 			if (args["model"] == 'nb'):
 
 				v_train = v_train.toarray()
@@ -113,6 +117,7 @@ class Build_model():
 			v_train = vector.fit_transform(X_train.values.tolist())
 			v_test = vector.transform(X_test)
 
+			# change type to array if model is naive bayes
 			if (args["model"] == 'nb'):
 
 				v_train = v_train.toarray()
@@ -202,13 +207,16 @@ class Build_model():
 
 	def write_score(self, train_score, test_score):
 
+		# get arguments
 		arg = Args()
 		args = arg.parse_arguments()
 		h = Helper()
 
+		# save arguments as variables
 		m_name = args["model"]
 		v_name = args["vector"]
 
+		# print and save the received results
 		print(f"\nShowing results for {v_name} and {m_name} Model")
 		h.write_report(f"\nShowing results for {v_name} and {m_name} Model")
 		print(f"Training Accuarcy: %.3f" % train_score)

@@ -45,4 +45,5 @@
 * IMPORTANT: as final step, propose text generation, of how negative news can be rewritten to sound less negative -> solutions-oriented journalism, start with headlines
 * and then check if rewritten articles/headlines would be considered less negative by the model
 * [Text Generation](https://huggingface.co/tasks/text-generation)
-* 
+
+* use alpaca for headline generation
