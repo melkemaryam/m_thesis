@@ -49,7 +49,7 @@ from helper import Helper
 
 import matplotlib.pyplot as plt
 from sklearn.model_selection import LearningCurveDisplay, learning_curve
-
+from plot_keras_history import plot_history
 
 class Build_model():
 

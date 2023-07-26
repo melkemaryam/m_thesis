@@ -26,7 +26,7 @@ class Read_data():
 
 		data.fillna('', inplace=True)
 		data.drop(columns = ['Unnamed: 0'], inplace=True)
-		data = data.iloc[:10000]
+		data = data.iloc[:20000]
 
 		return data
 
@@ -39,7 +39,7 @@ class Read_data():
 
 	def get_titles(self):
 
-		df_title = pd.read_csv("/Users/Hannah1/Downloads/title_df_final.csv", sep='\t', lineterminator='\n')
+		df_title = pd.read_csv("/Users/Hannah1/My Drive/Enigma/m_thesis/info/title_df_final.csv", sep='\t', lineterminator='\n')
 		data = self.adjust_data(df_title)
 
 		return data
@@ -62,3 +62,62 @@ class Read_data():
 			data = self.get_articles()
 
 			return data
+
+	def prepare_data(self, text):
+
+		# create a temporary list that includes all words
+		word_list = []
+		text = text['tokenised']
+	    
+		# create the empty dictionary
+		word2idx = dict()
+
+		# iterate through the entire corpus to create the list of words
+		#for index, row in text.items():
+		for row in text:
+
+			#print(row)
+			row = row.split()
+
+			for word in row:
+				if word not in word_list:
+					word_list.append(word)
+
+		# iterate through the list of words and add each word with the corresponding index to the dictionary
+		for idx, word in enumerate(word_list):
+			word2idx[word] = idx
+
+		# return the final dictionary
+		return word2idx
+
+	def prepare_sent(self, text, word2idx):
+
+		# create new list
+		sents_as_ids = []
+		text = text['tokenised']
+
+		# iterate through entire corpus
+		#for index, row in text.items():
+		for row in text:
+
+			#print(row)
+			row = row.split()
+			# create temporary list for the integers
+			integer_list = []
+
+			# iterate through all words in the sentence
+			for word in row:
+
+				# add the index of the word to the list of integers
+				integer_list.append(word2idx[word])
+
+			# add the list of integers to the final list
+			sents_as_ids.append(integer_list)
+    
+		return sents_as_ids
+
+	def get_idx2word(self, word2idx):
+
+		idx2word = {index: word for word, index in word2idx.items()}
+
+		return idx2word

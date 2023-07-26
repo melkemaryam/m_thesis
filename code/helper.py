@@ -5,6 +5,7 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 from sklearn.model_selection import LearningCurveDisplay, ShuffleSplit
 import os
+from plot_keras_history import plot_history
 
 class Helper():
 
@@ -48,9 +49,8 @@ class Helper():
 
 		if (args["model"] == 'tf'):
 
-			plt.plot(model.history.history["accuracy"], label="training accuracy")
-			plt.plot(model.history.history["val_accuracy"], label="validation accuracy")
-			plt.title('Training Accuracy vs. Validation accuracy ')
+			plot_history(model.history)
+			plt.title('Accuracy')
 
 		else:
 
