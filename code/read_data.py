@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 import os
 import glob
+import collections
 
 from sklearn.model_selection import train_test_split
 
@@ -29,6 +30,7 @@ class Read_data():
 		data = data.iloc[:20000]
 
 		return data
+
 
 	def get_articles(self):
 
@@ -62,6 +64,55 @@ class Read_data():
 			data = self.get_articles()
 
 			return data
+
+	def return_freq(self, text):
+
+		# create a temporary list that includes all words
+		freq_list = []
+		word_list = []
+
+		for row in text:
+
+			#print(row)
+			row = row.split()
+
+			for word in row:
+				#if word not in word_list:
+				word_list.append(word)
+
+		counter = collections.Counter(word_list)
+
+		words = list(counter.keys())
+		freq = list(counter.values())
+
+		freqq = ['']*len(text)
+		textt = pd.DataFrame()
+		textt['freq'] = freqq
+		c = 0
+
+		for row in text:
+
+			#print(row)
+			row = row.split()
+			freqs = []
+
+			for word in row:
+
+				if word in words:
+
+					fr = counter.get(word)
+					freqs.append(fr)
+
+			#print(freqs)
+			textt.loc[c, 'freq'] = freqs	
+
+			c += 1
+
+		textt = textt['freq'].to_list()
+		#text.drop(columns='tokenised')
+
+		return textt
+
 
 	def prepare_data(self, text):
 

@@ -11,6 +11,7 @@ import collections
 import nltk
 import seaborn as sns
 from sklearn.manifold import TSNE
+import numpy as np
 
 class Helper():
 
