@@ -22,6 +22,8 @@ from read_data import Read_data
 from IPython.display import SVG, display
 from keras.utils import vis_utils
 from sklearn.metrics.pairwise import cosine_similarity
+import seaborn as sns
+import nltk
 
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
@@ -29,6 +31,7 @@ from helper import Helper
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 from datetime import datetime
+# good tutorial: http://mccormickml.com/2016/04/19/word2vec-tutorial-the-skip-gram-model/
 
 class Skip():
 
@@ -37,10 +40,10 @@ class Skip():
 		re = Read_data()
 		h = Helper()
 
-		#data = data['tokenised']
-
 		word2idx = re.prepare_data(data)
 		idx2word = re.get_idx2word(word2idx)
+
+		h.plot_freq(data)
 
 		h.write_report(f"The size of this dataset is %.1f" % len(data))
 		print('Number of unique words:', len(word2idx))
@@ -79,20 +82,16 @@ class Skip():
 		# The input is an array of target indices e.g. [2, 45, 7, 23,...9]
 		context_word = Input((1,), dtype='int32')
 
-
 		# feed the words into the model using the Keras <Embedding> layer. This is the hidden layer 
 		# from whose weights we will get the word embeddings.
 		context_embedding = Embedding(VOCAB_SIZE, EMBED_SIZE, name='context_embed_layer',
 									embeddings_initializer='glorot_uniform',
 									input_length=1)(context_word)
 
-
 		# at this point, the input would of the shape (num_inputs x 1 x embed_size) and has to be flattened 
 		# or reshaped into a (num_inputs x embed_size) tensor.
 		context_input = Reshape((EMBED_SIZE, ))(context_embedding)
-
 		merged_inputs = Dot(axes=-1, normalize=False)([target_input, context_input])
-
 		label = Dense(1, 'sigmoid')(merged_inputs)
 
 		# label is the output of step D.
@@ -100,8 +99,7 @@ class Skip():
 
 		model.compile(loss='mean_squared_error', optimizer='rmsprop')
 
-		model.summary()
-		h.write_report(model.summary())
+		h.write_report(str(model.summary()))
 
 		NUM_EPOCHS = 5
 
@@ -125,14 +123,11 @@ class Skip():
 
 			print('Processed all %d sentences' %i)
 			print('Epoch:', epoch, 'Loss:', epoch_loss, '\n')
-
 		
 		word_embeddings = model.get_layer('target_embed_layer').get_weights()[0] 
 
 		# should return (VOCAB_SIZE, EMBED_SIZE)
-
 		print(word_embeddings.shape)
-
 		print(DataFrame(word_embeddings, index=idx2word.values()).head(10))
 
 		similarity_matrix = cosine_similarity(word_embeddings)
@@ -140,32 +135,16 @@ class Skip():
 		# should print(VOCAB_SIZE, VOCAB_SIZE)
 		print(similarity_matrix.shape)
 
-		search_terms = ['death', 'life', 'good', 'bad', 'man', 'woman']
-
+		search_terms = ['death', 'life', 'good', 'bad', 'man', 'woman', 'happy']
 		similar_words = dict()
 		df = DataFrame(similarity_matrix, idx2word.values(), idx2word.values())
 
 		for term in search_terms:
 
-			similar_words[term] = df[term].abs().sort_values(ascending=False).iloc[1:6].index.to_list()
+			similar_words[term] = df[term].abs().sort_values(ascending=False).iloc[1:11].index.to_list()
 
 		print(similar_words)
 		h.write_report(similar_words)
-
-		tsne = TSNE(perplexity=3, n_components=2, init='pca', n_iter=5000, method='exact')
-		np.set_printoptions(suppress=True)
-		plot_only = 50 
-
-		T = tsne.fit_transform(word_embeddings[:plot_only, :])
-		labels = [idx2word[i+1] for i in range(plot_only)]
-		plt.figure(figsize=(14, 8))
-		plt.scatter(T[:, 0], T[:, 1])
-		for label, x, y in zip(labels, T[:, 0], T[:, 1]):
-			plt.annotate(label, xy=(x+1, y+1), xytext=(0, 0), textcoords='offset points', ha='right', va='bottom')                      	                        
-
-		plt.savefig("../plots/tsne_" + datetime.now().strftime("%Y%m%d-%H%M"))
-		h.write_report("![](../plots/tsne_" + datetime.now().strftime("%Y%m%d-%H%M")+ ".png)")
-		
-		plt.show()
+		h.plot_tsne(word_embeddings, idx2word)
 
 		return model

@@ -33,7 +33,7 @@ if __name__ == '__main__':
 		data = re.return_data()
 			
 		#model, vector, tain_score, test_score = bu.build_net(data)
-		model = sk.create_train(data)
+		model = sk.create_train(data[:2000])
 
 		#if (args["optimiser"] == 'boost'):
 

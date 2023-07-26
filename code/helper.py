@@ -6,6 +6,11 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import LearningCurveDisplay, ShuffleSplit
 import os
 from plot_keras_history import plot_history
+from read_data import Read_data
+import collections
+import nltk
+import seaborn as sns
+from sklearn.manifold import TSNE
 
 class Helper():
 
@@ -39,6 +44,50 @@ class Helper():
 
 		return labels
 
+	def plot_freq(self, data):
+
+		re = Read_data()
+
+		wordl = re.get_words(data)
+		counter = collections.Counter(wordl)
+
+		sns.set_style('darkgrid')
+		words=nltk.FreqDist(wordl)
+		ll = dict(sorted(counter.items(),key=lambda x:x[1], reverse=True))
+		lls = ll.items()
+		x,y = zip(*lls)
+
+		plt.close()
+
+		plt.plot(x[:20],y[:20])
+		plt.title('Frequency Distribution')
+		plt.xlabel('Words')
+		plt.xticks(x[:20], rotation=90)
+		plt.ylabel('Counts')
+		plt.tight_layout()
+
+		plt.savefig("../plots/plot_freq_" + datetime.now().strftime("%Y%m%d-%H%M"))
+		self.write_report("![](../plots/plot_freq_" + datetime.now().strftime("%Y%m%d-%H%M")+ ".png)")
+		
+		return counter
+
+	def plot_tsne(self, word_embeddings, idx2word):
+
+		tsne = TSNE(perplexity=3, n_components=2, init='pca', n_iter=5000, method='exact')
+		np.set_printoptions(suppress=True)
+		plot_only = 100 
+
+		T = tsne.fit_transform(word_embeddings[:plot_only, :])
+		labels = [idx2word[i+1] for i in range(plot_only)]
+		plt.figure(figsize=(14, 8))
+		plt.scatter(T[:, 0], T[:, 1])
+		for label, x, y in zip(labels, T[:, 0], T[:, 1]):
+			plt.annotate(label, xy=(x+1, y+1), xytext=(0, 0), textcoords='offset points', ha='right', va='bottom')                      	                        
+
+		plt.savefig("../plots/tsne_" + datetime.now().strftime("%Y%m%d-%H%M"))
+		self.write_report("![](../plots/tsne_" + datetime.now().strftime("%Y%m%d-%H%M")+ ".png)")
+
+
 	def plot_acc(self, model, v_train, y_train, op):
 
 		arg = Args()
@@ -70,8 +119,6 @@ class Helper():
 			plt.savefig("../plots/plot_acc_boost_" + datetime.now().strftime("%Y%m%d-%H%M"))
 			self.write_report("![](../plots/plot_acc_boost_" + datetime.now().strftime("%Y%m%d-%H%M")+ ".png)")
 
-		#plt.show()
-
 
 	def plot_loss(self, model):
 
@@ -91,4 +138,4 @@ class Helper():
 
 			plt.savefig("../plots/plot_loss_" + datetime.now().strftime("%Y%m%d-%H%M"))
 			self.write_report("![](../plots/plot_loss_" + datetime.now().strftime("%Y%m%d-%H%M")+ ".png)")
-			#plt.show()
+

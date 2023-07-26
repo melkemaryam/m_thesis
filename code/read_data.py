@@ -90,6 +90,25 @@ class Read_data():
 		# return the final dictionary
 		return word2idx
 
+	def get_words(self, text):
+
+		# create a temporary list that includes all words
+		word_list = []
+		text = text['tokenised']
+
+		# iterate through the entire corpus to create the list of words
+		#for index, row in text.items():
+		for row in text:
+
+			#print(row)
+			row = row.split()
+
+			for word in row:
+				#if word not in word_list:
+				word_list.append(word)
+
+		return word_list
+
 	def prepare_sent(self, text, word2idx):
 
 		# create new list

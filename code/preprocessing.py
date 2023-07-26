@@ -22,6 +22,11 @@ from nltk.stem import WordNetLemmatizer  # lemmatization
 nltk.download('wordnet')
 
 
+# CLEAN DATA
+# remove single letter tokens and apostrophes
+# remove -
+
+
 class Preprocessing():
 
 	def pre_process(self, data):
