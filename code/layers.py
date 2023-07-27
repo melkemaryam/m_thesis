@@ -64,9 +64,9 @@ class Layers():
 		tokenizer.fit_on_texts(X_train)
 		word_index = tokenizer.word_index
 		X_train = tokenizer.texts_to_sequences(X_train)
-		X_train = pad_sequences(X_train, maxlen=max_len, padding='pre', truncating='post')
+		X_train = pad_sequences(X_train, maxlen=max_len, padding='post', truncating='post')
 		X_test = tokenizer.texts_to_sequences(X_test)
-		X_test = pad_sequences(X_test, maxlen=max_len, padding='pre', truncating='post')
+		X_test = pad_sequences(X_test, maxlen=max_len, padding='post', truncating='post')
 
 		# convert lists into numpy arrays to make it work with TensorFlow 
 		X_train = np.array(X_train)

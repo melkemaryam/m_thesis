@@ -10,6 +10,7 @@ from helper import Helper
 from layers import Layers
 from skip import Skip
 from lstm_clf import Lstm_clf
+from cnn import Cnn
 
 import os
 
@@ -28,6 +29,7 @@ if __name__ == '__main__':
 		sk = Skip()
 		lstm = Lstm_clf()
 		la = Layers()
+		cn = Cnn()
 		a = Args()
 		args = a.parse_arguments()
 
@@ -36,7 +38,8 @@ if __name__ == '__main__':
 			
 		#model, vector, tain_score, test_score = bu.build_net(data)
 		#model = sk.create_train(data[:1000])
-		model = lstm.build_lstm(data)
+		#model = lstm.build_lstm(data)
+		model = cn.build_cnn(data)
 
 		#if (args["optimiser"] == 'boost'):
 

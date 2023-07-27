@@ -21,9 +21,9 @@ class Lstm_clf():
 		l = Layers()
 		h = Helper()
 		word2idx = re.prepare_data(data)
-		MAX_LENGHT = 200
+		MAX_LENGTH = 200
 
-		X_train, X_test, y_train, y_test = l.tokenise(data, MAX_LENGHT)
+		X_train, X_test, y_train, y_test = l.tokenise(data, MAX_LENGTH)
 
 		print('Length of sample train_data after preprocessing:', len(X_train[0]))
 		print('Sample train data:', X_train[0])
@@ -32,10 +32,10 @@ class Lstm_clf():
 		VOCAB_SIZE = len(word2idx)
 
 		# create the input layer
-		in_layer = Input((MAX_LENGHT,), dtype='int32')
+		in_layer = Input((MAX_LENGTH,), dtype='int32')
 
 		# add the embedding layer
-		emb_layer = Embedding(VOCAB_SIZE, EMBED_SIZE, mask_zero=True, input_length = MAX_LENGHT)(in_layer)
+		emb_layer = Embedding(VOCAB_SIZE, EMBED_SIZE, mask_zero=True, input_length = MAX_LENGTH)(in_layer)
 
 		# add first dropout layer
 		drop_1 = Dropout(0.5)(emb_layer)
