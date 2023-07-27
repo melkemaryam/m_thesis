@@ -31,7 +31,6 @@ class Read_data():
 
 		return data
 
-
 	def get_articles(self):
 
 		df_article = pd.read_csv("/Users/Hannah1/Downloads/article_df_final.csv", sep='\t', lineterminator='\n')
