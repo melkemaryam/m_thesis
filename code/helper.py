@@ -26,6 +26,10 @@ class Helper():
 
 		print("[INFO] report written")
 
+	def set_model(self, model):
+
+		return model
+
 	def check_path(self):
 		
 		# create the folder

@@ -1,6 +1,6 @@
 import tensorflow.keras as tf
 import numpy as np
-from keras.layers import Lambda, GlobalAveragePooling1D, Dense, Embedding
+from keras.layers import Lambda, GlobalAveragePooling1D, Dense, Embedding, Conv1D
 from keras import backend as K
 from keras.models import Sequential
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -13,6 +13,7 @@ import keras.layers
 from pandas import DataFrame
 from sklearn.metrics import classification_report
 from helper import Helper
+from predicting import Predicting
 
 class GlobalAveragePooling1DMasked(GlobalAveragePooling1D):
     def call(self, x, mask=None):
@@ -38,6 +39,7 @@ class Cnn():
 		l = Layers()
 		re = Read_data()
 		h = Helper()
+		pr = Predicting()
 
 		word2idx = re.prepare_data(data)
 		idx2word = re.get_idx2word(word2idx)
@@ -46,7 +48,8 @@ class Cnn():
 		print(idx2word[50])
 
 		MAX_LENGTH = 256
-		X_train, X_test, y_train, y_test = l.tokenise(data, MAX_LENGTH)
+		EMBED_SIZE = 100
+		X_train, X_test, y_train, y_test, t = l.tokenise(data, MAX_LENGTH)
 		print("Training entries: {}, labels: {}".format(len(X_train), len(y_train)))
 
 		print(X_train[1])
@@ -55,7 +58,16 @@ class Cnn():
 		model = Sequential()
 
 		# add one-hot layer
-		model.add(self.OneHot(input_dim=VOCAB_SIZE, input_length=MAX_LENGTH))
+		#model.add(self.OneHot(input_dim=VOCAB_SIZE, input_length=MAX_LENGTH))
+
+		# add the embedding layer
+		model.add(Embedding(VOCAB_SIZE, EMBED_SIZE, mask_zero=True, input_length = MAX_LENGTH))
+
+		# add convolutional layer
+		model.add(Conv1D(100,6))
+
+		# add convolutional layer
+		model.add(Conv1D(100,6))
 
 		# compute average
 		model.add(GlobalAveragePooling1DMasked())
@@ -88,14 +100,4 @@ class Cnn():
 		h.plot_acc(history, X_train, y_train, op = 'normal')
 		print('test_loss:', results[0], 'test_accuracy:', results[1])
 
-
-
-
-
-
-
-
-
-
-
-	
+		pp = pr.prediction_process(data, model, t)

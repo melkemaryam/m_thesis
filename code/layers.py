@@ -74,7 +74,7 @@ class Layers():
 		X_test = np.array(X_test)
 		y_test = np.array(y_test)
 
-		return X_train, X_test, y_train, y_test
+		return X_train, X_test, y_train, y_test, tokenizer
 
 	def build_tf(self, data):
 
@@ -84,7 +84,7 @@ class Layers():
 		print("[INFO] training network...")
 		h.write_report(f"The size of this dataset is %.1f" % len(data))
 
-		X_train, X_test, y_train, y_test = self.tokenise(data, 120)
+		X_train, X_test, y_train, y_test, t = self.tokenise(data, 120)
 
 		model = tf.keras.Sequential([
 		    tf.keras.layers.Embedding(1000, 64, input_length=120),

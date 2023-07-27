@@ -23,7 +23,7 @@ class Lstm_clf():
 		word2idx = re.prepare_data(data)
 		MAX_LENGTH = 200
 
-		X_train, X_test, y_train, y_test = l.tokenise(data, MAX_LENGTH)
+		X_train, X_test, y_train, y_test, t = l.tokenise(data, MAX_LENGTH)
 
 		print('Length of sample train_data after preprocessing:', len(X_train[0]))
 		print('Sample train data:', X_train[0])
