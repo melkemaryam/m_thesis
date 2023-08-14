@@ -18,7 +18,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
 
 ##Deep learning libraries and APIs
-import numpy as np
 import tensorflow as tf
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -47,7 +46,6 @@ from sklearn.pipeline import Pipeline
 from read_data import Read_data
 from helper import Helper
 
-import matplotlib.pyplot as plt
 from sklearn.model_selection import LearningCurveDisplay, learning_curve
 from plot_keras_history import plot_history
 

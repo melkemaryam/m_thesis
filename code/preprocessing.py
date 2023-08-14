@@ -22,66 +22,95 @@ from nltk.stem import WordNetLemmatizer  # lemmatization
 nltk.download('wordnet')
 
 
-# CLEAN DATA
-# remove single letter tokens and apostrophes
-# remove -
-
-
 class Preprocessing():
 
-	def pre_process(self, data):
+	def pre_process(self, df):
 
-	    publishers = ['The New York Times', 'Breitbart', 'CNN', 'Business Insider', 'Fox News', 'Talking Points Memo', 'Buzzfeed News', 'National Review', 'New York Post', 'The Guardian', 'NPR', 'Reuters', 'Vox', 'Washington Post', 'Associated Press']
+		publishers = ['The New York Times', 'Breitbart', 'CNN', 'Business Insider', 'Fox News', 'Talking Points Memo', 'Buzzfeed News', 'National Review', 'New York Post', 'The Guardian', 'NPR', 'Reuters', 'Vox', 'Washington Post', 'Associated Press']
 
-	    text = df
+		text = df
 
-	    for a in publishers:
-	      if a in df:
-	        text = df.replace(a, '')
+		for a in publishers:
+			if a in df:
+				text = df.replace(a, '')
 
-	    # take care of punction
-	    text = re.sub(r"([.,;:!?'\"“\(\)])(\w)", r"\1 \2", text) # when at the beginning of a string, separate punctuation
-	    text = re.sub(r"(\w)([.,;:!?'\"”\)])", r"\1 \2", text) # when at the end of a string, separate punctuation
+		# take care of punction
+		text = re.sub(r"([.,;:!?'\"“\(\)])(\w)", r"\1 \2", text) # when at the beginning of a string, separate punctuation
+		text = re.sub(r"(\w)([.,;:!?'\"”\)])", r"\1 \2", text) # when at the end of a string, separate punctuation
+		text = re.sub('(\\b[A-Za-z] \\b|\\b [A-Za-z]\\b)', '', text)
 
-	    # remove any numbers
-	    numbers = r'\d+'
-	    text = re.sub(pattern=numbers, repl=" ", string=text)
+		# remove any numbers
+		numbers = r'\d+'
+		text = re.sub(pattern=numbers, repl=" ", string=text)
 
-	    # split the string into separate tokens
-	    tokens = re.split(r"\s+",text)
+		# split the string into separate tokens
+		tokens = re.split(r"\s+",text)
 
-	    # normalise all words into lowercase
-	    final = [t.lower() for t in tokens]
+		# normalise all words into lowercase
+		final = [t.lower() for t in tokens]
 
-	    tokens = []
+		tokens = []
 
-	    # remove any strings signalising end of line
-	    for i in range(len(final)):
-	        if final[i] != '-' and final[i] != '—' and final[i] != '“' and final[i] != '”':
-	            tokens.append(final[i])
+		# remove any strings signalising end of line
+		for i in range(len(final)):
+			if final[i] != '-' and final[i] != '—' and final[i] != '“' and final[i] != '”':
+				tokens.append(final[i])
 
-	    # remove any unncessary punctuation connected to words
-	    x = '[{}]'.format(re.escape(string.punctuation)+'…').replace("...", "").replace("-", "")
-	    pattern = re.compile(x)
-	    tokens = [f for f in filter(None, [pattern.sub('', token) for token in tokens])]
+		# remove any unncessary punctuation connected to words
+		x = '[{}]'.format(re.escape(string.punctuation)+'…').replace("...", "").replace("-", "")
+		pattern = re.compile(x)
+		tokens = [f for f in filter(None, [pattern.sub('', token) for token in tokens])]
 
-	    # remove stop words
-	    stopwords = nltk.corpus.stopwords.words('english')
-	    tokens = [token for token in tokens if token not in stopwords]
+		# remove stop words
+		stopwords = nltk.corpus.stopwords.words('english')
+		tokens = [token for token in tokens if token not in stopwords]
 
-	    # apply lemmatisation
-	    lemmatiser = WordNetLemmatizer()
-	    tokens = [lemmatiser.lemmatize(token) for token in tokens]
+		# apply lemmatisation
+		lemmatiser = WordNetLemmatizer()
+		tokens = [lemmatiser.lemmatize(token) for token in tokens]
 
+		tokens = [w for w in tokens if len(w)>1]
 
-	    # return final list of tokens
-	    return tokens
+		# return final list of tokens
+		return tokens
 
+	def test_pp(self):
 
+		text_test = "I have e ' h , the — high ground ” , “ Anakin! - The New York Times"
+		print(text_test)
+		tokens_test = self.pre_process(text_test)
+		print(tokens_test)
 
+	def apply_preprocess(self, data):
 
+		arg = Args()
+		args = arg.parse_arguments()
 
+		print("[INFO] preprocessing the data...")
 
+		if 'tokenised' in data.columns:
 
+			data.rename(columns = {'tokenised':'old_tokens'}, inplace = True)
 
+		tokenised = ['']* int(data.shape[0])
+		data['tokenised'] = tokenised
+
+		for index, row in data.iterrows():
+			token = []
+
+			if (args["data"] == 'titles'):
+				token = pre_process(row['title'])
+			elif (args["data"] == 'articles'):
+				token = pre_process(row['article'])
+			
+			# Using .join() to Convert a List to a String
+			conv_token = ' '.join(token)
+
+			data.loc[index, 'tokenised'] = conv_token
+
+		data.head()
+
+		print("[INFO] data fully preprocessed...")
+
+		return data
 

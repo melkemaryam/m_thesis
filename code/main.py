@@ -22,7 +22,7 @@ if __name__ == '__main__':
 		#tu = Tuning(None)
 		#tr = Training()
 		re = Read_data()
-		#prep = Preprocessing(None, None, None, None, None, None, None)
+		prep = Preprocessing()
 		#pred = Predicting()
 		he = Helper()
 		#ev = Evaluating()
@@ -34,16 +34,18 @@ if __name__ == '__main__':
 		args = a.parse_arguments()
 
 		# get data
-		data = re.return_data()
+		#data = re.return_data()
 			
 		#model, vector, tain_score, test_score = bu.build_net(data)
 		#model = sk.create_train(data[:1000])
 		#model = lstm.build_lstm(data)
-		model = cn.build_cnn(data)
+		#model = cn.build_cnn(data)
 
 		#if (args["optimiser"] == 'boost'):
 
 			#boosting, vector, train_score, test_score = bu.boost_model(data, model)
+
+		prep.test_pp()
 
 	except KeyboardInterrupt:
 		pass
