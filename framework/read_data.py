@@ -16,14 +16,33 @@ from preprocessing import Preprocessing
 
 class Read_data():
 
+	def __init__(self, X_train, X_test, y_train, y_test):
+
+		self.X_train = X_train
+		self.X_test = X_test
+		self.y_train = y_train
+		self.y_test = y_test
+
 	def train_test_data(self, data):
 
 		# Features and Labels
 		X = data['tokenised']
 		y = data['agg_label']
-		X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)
+		self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)
 
-		return X_train, X_test, y_train, y_test
+		return self.X_train, self.X_test, self.y_train, self.y_test
+
+	def get_x_train(self):
+		return self.X_train
+
+	def get_x_test(self):
+		return self.X_test
+
+	def get_y_train(self):
+		return self.y_train
+
+	def get_y_test(self):
+		return self.y_test
 
 	def adjust_data(self, data):
 
@@ -64,14 +83,14 @@ class Read_data():
 		# get titles only
 		if (args["preprocess"] == 'no'):
 
-			df_article = pd.read_csv("/Users/Hannah1/My Drive/Enigma/m_thesis/info/title_df_final.csv", sep='\t', lineterminator='\n')
+			df_article = pd.read_csv("/Users/Hannah1/My Drive/Enigma/m_thesis/info/titles_with_labels.csv", sep='\t', lineterminator='\n')
 			data = self.adjust_data(df_article)
 
 		elif (args["preprocess"] == 'yes'):
 
 			p = Preprocessing()
 
-			df_title = pd.read_csv("/Users/Hannah1/My Drive/Enigma/m_thesis/info/title_df_final.csv", sep='\t', lineterminator='\n')
+			df_title = pd.read_csv("/Users/Hannah1/My Drive/Enigma/m_thesis/info/titles_with_labels.csv", sep='\t', lineterminator='\n')
 			data = self.adjust_data(df_title)
 			data, path = p.apply_preprocessing(data)
 			df_title = pd.read_csv(path, sep='\t', lineterminator='\n')

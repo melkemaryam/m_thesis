@@ -35,8 +35,8 @@ class Preprocessing():
 				text = df.replace(a, '')
 
 		# take care of punction
-		text = re.sub(r"([.,;:!?'\"“\(\)])(\w)", r"\1 \2", text) # when at the beginning of a string, separate punctuation
-		text = re.sub(r"(\w)([.,;:!?'\"”\)])", r"\1 \2", text) # when at the end of a string, separate punctuation
+		text = re.sub(r"([.,;‘:’!-?'\"“\(\)])(\w)", r"\1 \2", text) # when at the beginning of a string, separate punctuation
+		text = re.sub(r"(\w)([.,;‘:’!-?'\"”\)])", r"\1 \2", text) # when at the end of a string, separate punctuation
 		text = re.sub('(\\b[A-Za-z] \\b|\\b [A-Za-z]\\b)', '', text)
 
 		# remove any numbers
@@ -57,7 +57,7 @@ class Preprocessing():
 				tokens.append(final[i])
 
 		# remove any unncessary punctuation connected to words
-		x = '[{}]'.format(re.escape(string.punctuation)+'…').replace("...", "").replace("-", "")
+		x = '[{}]'.format(re.escape(string.punctuation)+'…').replace("...", "").replace("-", "").replace("‘", "").replace("’", "")
 		pattern = re.compile(x)
 		tokens = [f for f in filter(None, [pattern.sub('', token) for token in tokens])]
 
@@ -91,6 +91,7 @@ class Preprocessing():
 		if 'tokenised' in data.columns:
 
 			data.rename(columns = {'tokenised':'old_tokens'}, inplace = True)
+			data.drop(columns = ["old_tokens"], inplace=True)
 
 		tokenised = ['']* int(data.shape[0])
 		data['tokenised'] = tokenised
@@ -123,6 +124,7 @@ class Preprocessing():
 
 		if (args["data"] == 'titles'):
 			
+			# CHANGE PATH EVERY TIME
 			path = "/Users/Hannah1/My Drive/Enigma/m_thesis/info/title_df_final2.csv"
 			data.to_csv("/Users/Hannah1/My Drive/Enigma/m_thesis/info/title_df_final2.csv", sep='\t')
 
@@ -130,6 +132,7 @@ class Preprocessing():
 
 		elif (args["data"] == 'articles'):
 
+			# CHANGE PATH EVERY TIME
 			path = "/Users/Hannah1/Downloads/article_df_final2.csv"
 			data.to_csv("/Users/Hannah1/Downloads/article_df_final2.csv", sep='\t')
 
