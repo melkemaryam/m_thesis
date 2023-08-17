@@ -63,7 +63,7 @@ class Build_tf():
 		hp_embed_size = hp.Choice('output_dim', values = [64, 100, 150])
 
 		MAX_LENGTH = 256
-		VOCAB_SIZE = re.get_word2idx(MAX_LENGTH)
+		VOCAB_SIZE = len(re.prepare_data())
 
 		# build the model layer by layer
 		# First layer
@@ -112,7 +112,7 @@ class Build_tf():
 
 		MAX_LENGTH = 256 # or 200
 		EMBED_SIZE = 100 # or 64
-		VOCAB_SIZE = re.get_word2idx(MAX_LENGTH)
+		VOCAB_SIZE = len(re.prepare_data())
 
 		# initialise sequential model
 		self.model = Sequential()
@@ -163,19 +163,19 @@ class Build_tf():
 	# function for the first layer
 	def add_first_conv(self, filters):
 
-		self.model.add(Conv1D(filters=filters, kernel_size=(5, 5), activation='relu', kernel_initializer='he_uniform', padding='same'))
+		self.model.add(Conv1D(filters=filters, kernel_size=(5), activation='relu', kernel_initializer='he_uniform', padding='same'))
 		self.model.add(BatchNormalization(axis=-1))
 
 	# function for the next layer
 	def add_convolution(self, filters):
 
-		self.model.add(Conv1D(filters=filters, kernel_size=(3, 3), activation='relu', kernel_initializer='he_uniform', padding='same'))
+		self.model.add(Conv1D(filters=filters, kernel_size=(3), activation='relu', kernel_initializer='he_uniform', padding='same'))
 		self.model.add(BatchNormalization(axis=-1))
 
 	# function for pooling
 	def add_pooling(self, dropout):
 
-		self.model.add(GlobalAveragePooling1DMasked())
+		#self.model.add(GlobalAveragePooling1D())
 		self.model.add(Dropout(rate=dropout))
 
 	def add_lstm(self, EMBED_SIZE, dropout):
@@ -207,15 +207,8 @@ class Build_tf():
 	def compile(self):
 
 		inop = Inner_opt()
+		op = inop.direct_adam()
 
 		# compile model
 		print("[INFO] compiling model...")
-		self.model.compile(loss="categorical_crossentropy", optimizer=inop.return_optimiser, metrics=["accuracy"])
-
-
-class GlobalAveragePooling1DMasked(GlobalAveragePooling1D):
-    def call(self, x, mask=None):
-        if mask != None:
-            return K.sum(x, axis=1) / K.sum(mask, axis=1)
-        else:
-            return super().call(x)
+		self.model.compile(loss="categorical_crossentropy", optimizer=op, metrics=["accuracy"])

@@ -20,35 +20,32 @@ from preprocessing import Preprocessing
 
 class Read_data():
 
-	def __init__(self, X_train, X_test, y_train, y_test, word2idx):
+	def get_data(self):
 
-		self.X_train = X_train
-		self.X_test = X_test
-		self.y_train = y_train
-		self.y_test = y_test
-		self.word2idx = word2idx
+		# get data
+		data = self.return_data()
+		print(data.head())
 
-	def get_data(self, data)
+		data = data[:1000]
 
-		self.train_test_data(data)
-		self.prepare_data(data)
+		return data
 
-	def train_test_data(self, data):
+	def train_test_data(self):
+
+		data = self.get_data()
 
 		# Features and Labels
 		X = data['tokenised']
 		y = data['agg_label']
-		self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)
+		X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)
+		print(X_train[:10])
 
-		return self.X_train, self.X_test, self.y_train, self.y_test
+		return X_train, X_test, y_train, y_test
 
 	def tokenise(self, max_len):
 
 		# get values
-		X_train = self.get_x_train()
-		X_test = self.get_x_test()
-		y_train = self.get_y_train()
-		y_test = self.get_y_test()
+		X_train, X_test, y_train, y_test = self.train_test_data()
 
 		#preprocess 
 		tokenizer = Tokenizer(num_words=10000, oov_token= "<OOV>")
@@ -66,21 +63,6 @@ class Read_data():
 		y_test = np.array(y_test)
 
 		return X_train, X_test, y_train, y_test, tokenizer
-
-	def get_x_train(self):
-		return self.X_train
-
-	def get_x_test(self):
-		return self.X_test
-
-	def get_y_train(self):
-		return self.y_train
-
-	def get_y_test(self):
-		return self.y_test
-
-	def get_word2idx(self):
-		return self.word2idx
 
 	def adjust_data(self, data):
 
@@ -204,14 +186,16 @@ class Read_data():
 		return textt
 
 
-	def prepare_data(self, text):
+	def prepare_data(self):
+
+		text = self.get_data()
 
 		# create a temporary list that includes all words
 		word_list = []
 		text = text['tokenised']
 	    
 		# create the empty dictionary
-		self.word2idx = dict()
+		word2idx = dict()
 
 		# iterate through the entire corpus to create the list of words
 		#for index, row in text.items():
@@ -226,10 +210,10 @@ class Read_data():
 
 		# iterate through the list of words and add each word with the corresponding index to the dictionary
 		for idx, word in enumerate(word_list):
-			self.word2idx[word] = idx
+			word2idx[word] = idx
 
 		# return the final dictionary
-		return self.word2idx
+		return word2idx
 
 	def get_words(self, text):
 

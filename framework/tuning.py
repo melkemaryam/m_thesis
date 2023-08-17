@@ -39,7 +39,7 @@ class Tuning():
 	def search_tuner(self, tuner):
 
 		# create objects of class
-		r = Read_data(None, None, None, None, None)
+		r = Read_data()
 		MAX_LENGTH = 256
 		
 		# get values

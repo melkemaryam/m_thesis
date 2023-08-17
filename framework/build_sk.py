@@ -39,36 +39,25 @@ class Build_sk():
 
 			# train with logistic regression
 			if (args["model"] == 'log'):
-				return self.build_log
+
+				# create logistic regression model 
+				self.model = LogisticRegression(n_jobs=1, C = 1, max_iter = 1000, class_weight="balanced")
+
+				return self.model
 
 			# train with support vector machine
 			elif (args["model"] == 'svm'):
-				return self.build_svm
+				# create support vector classifier
+				self.model = SVC(kernel='linear', probability=True, C = 1, gamma = "auto")
+
+				return self.model
 
 			# train with naive bayes
 			elif (args["model"] == 'nb'):
-				return self.build_nb
+				# create gaussian naive bayes
+				self.model = GaussianNB()
 
-	def build_log(self):
-
-		# create logistic regression model 
-		self.model = LogisticRegression(n_jobs=1, C = 1, max_iter = 1000, class_weight="balanced")
-
-		return self.model
-
-	def build_svm(self):
-
-		# create support vector classifier
-		self.model = SVC(kernel='linear', probability=True, C = 1, gamma = "auto")
-
-		return self.model
-
-	def build_nb(self):
-		
-		# create gaussian naive bayes
-		self.model = GaussianNB()
-
-		return self.model
+				return self.model
 
 	def get_vector(self, X_train, X_test):
 
@@ -112,7 +101,7 @@ class Build_sk():
 			
 			# Train the word2vec model
 			w2v_model = Word2Vec(X_train,
-								vector_size=100, ## Size of the Vector
+								vector_size=1000, ## Size of the Vector
 								window=5, ## Number words before and after the focus word that it’ll consider as context for the word
 								min_count=2) ## The number of times a word must appear in our corpus in order to create a word vector
 

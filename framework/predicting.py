@@ -7,6 +7,10 @@ import os
 import random
 
 import tensorflow as tf
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+
+import tensorflow as tf
 from tensorflow.keras.models import load_model
 from helper import Helper
 from read_data import Read_data
@@ -38,7 +42,7 @@ class Predicting():
 		arg = Args()
 		args = arg.parse_arguments()
 		h = Helper()
-		r = Read_data(None, None, None, None, None)
+		r = Read_data()
 
 		# grab the paths to the input images, shuffle them, and grab a sample
 		print("[INFO] predicting...")
@@ -46,23 +50,26 @@ class Predicting():
 
 		labels = h.get_labels()
 		MAX_LENGTH = 256
+		model = self.load_net()
 
 		if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm'):
-			X_train, X_test, y_train, y_test, tok = re.tokenise(MAX_LENGTH)
+			X_train, X_test, y_train, y_test = r.train_test_data()
+			tokeniser = Tokenizer(num_words=10000, oov_token= "<OOV>")
+			tokeniser.fit_on_texts(X_train)
 
 		elif(args["model"] == 'log' or args["model"] == 'svm' or args["model"] == 'nb'):
 			# get values
-			X_train = r.get_x_train()
-			X_test = r.get_x_test()
-			y_train = r.get_y_train()
-			y_test = r.get_y_test()
+			X_train, X_test, y_train, y_test = r.train_test_data()
+			tokeniser = Tokenizer(num_words=10000, oov_token= "<OOV>")
+			tokeniser.fit_on_texts(X_train)
+			MAX_LENGTH = 1000
 
 		for x in X_test[:10]:
 
 			print(x)
 			h.write_report(x)
 			sequences = tokeniser.texts_to_sequences(x)
-			padded_seqs = pad_sequences(sequences, maxlen=256, padding='post', truncating='post')
+			padded_seqs = pad_sequences(sequences, maxlen=MAX_LENGTH, padding='post', truncating='post')
 			p = model.predict(padded_seqs)
 			print(float(p[0]))
 			h.write_report(float(p[0]))

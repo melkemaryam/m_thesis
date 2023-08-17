@@ -8,6 +8,8 @@ from preprocessing import Preprocessing
 from predicting import Predicting
 from inner_opt import Inner_opt
 from helper import Helper
+# import packages
+import argparse
 
 import os
 
@@ -19,7 +21,7 @@ if __name__ == '__main__':
 		bu = Build_tf(None)
 		tu = Tuning(None)
 		tr = Training()
-		re = Read_data(None, None, None, None, None)
+		re = Read_data()
 		prep = Preprocessing()
 		pred = Predicting()
 		ino = Inner_opt()
@@ -27,17 +29,17 @@ if __name__ == '__main__':
 		a = Args()
 		args = a.parse_arguments()
 
-		# get data
-		data = re.return_data()
-		re.train_test_data(data)
-
 		# predict images only with privided folder
 		if(args["train"] == 'pred'):
 			pred.prediction_process()
 
 		# train, test, optimise, and predict with provided images
 		elif((args["train"] == "all" or args["train"] == "one" or args["train"] == "none")):
-			prep.prepare_data()
+
+			# get data
+			#data = re.return_data()
+			re.train_test_data()
+			#print(data.head())
 
 			if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm'):
 				tr.train_tf()
@@ -49,3 +51,26 @@ if __name__ == '__main__':
 
 	except KeyboardInterrupt:
 		pass
+
+
+# log/tfidf with training: python3 main.py -m log -v tfidf -d titles -tr none -pa ../output/log_tfidf.model
+# log/count with training: python3 main.py -m log -v count -d titles -tr none -pa ../output/log_count.model
+# log/w2v with training: python3 main.py -m log -v w2v -d titles -tr none -pa ../output/log_w2v.model
+
+# svm/tfidf with training: python3 main.py -m svm -v tfidf -d titles -tr none -pa ../output/svm_tfidf.model
+# svm/count with training: python3 main.py -m svm -v count -d titles -tr none -pa ../output/svm_count.model
+# svm/w2v with training: python3 main.py -m svm -v w2v -d titles -tr none -pa ../output/svm_w2v.model
+
+# nb/tfidf with training: python3 main.py -m nb -v tfidf -d titles -tr none -pa ../output/nb_tfidf.model
+# nb/count with training: python3 main.py -m nb -v count -d titles -tr none -pa ../output/nb_count.model
+# nb/w2v with training: python3 main.py -m nb -v w2v -d titles -tr none -pa ../output/nb_w2v.model
+
+# basic with training: python3 main.py -m basic -d titles -tr none -pa ../output/basic.model
+
+
+
+
+
+
+
+

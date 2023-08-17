@@ -1,5 +1,12 @@
 from sklearn.metrics import classification_report
 from sklearn.metrics import f1_score
+from sklearn.metrics import accuracy_score
+
+import matplotlib.pyplot as plot
+import numpy as np
+import pandas as pd
+import os
+
 
 import tensorflow as tf
 from tensorflow.keras.callbacks import EarlyStopping
@@ -11,6 +18,14 @@ from helper import Helper
 from build_sk import Build_sk
 from tuning import Tuning
 from build_tf import Build_tf
+from read_data import Read_data
+
+from datetime import datetime
+
+
+# import packages
+import argparse
+from arguments import Args
 
 import joblib
 
@@ -18,19 +33,18 @@ class Training():
 
 	def train_sk(self):
 
-		r = Read_data(None, None, None, None, None)
+		r = Read_data()
 		h = Helper()
-		sk = Build_sk()
+		sk = Build_sk(None)
+		arg = Args()
+		args = arg.parse_arguments()
 
 		# get values
-		X_train = r.get_x_train()
-		X_test = r.get_x_test()
-		y_train = r.get_y_train()
-		y_test = r.get_y_test()
+		X_train, X_test, y_train, y_test = r.train_test_data()
 
 		# train the network
 		print("[INFO] training network...")
-		h.write_report(f"The size of this dataset is %.1f" % (len(X_train) + len(X_test) + len(y_train) + len(y_test)))
+		h.write_report(f"The size of this dataset is %.1f" % ((len(X_train) + len(X_test) + len(y_train) + len(y_test))/2))
 
 		vector, v_train, v_test = sk.get_vector(X_train, X_test)
 		model = sk.return_model()
@@ -60,7 +74,7 @@ class Training():
 
 	def train_tf(self):
 
-		re = Read_data(None, None, None, None)
+		re = Read_data()
 		h = Helper()
 		b = Build_tf(None)
 		t = Tuning(None)
@@ -74,7 +88,7 @@ class Training():
 
 		# train the network
 		print("[INFO] training network...")
-		h.write_report(f"The size of this dataset is %.1f" % (len(X_train) + len(X_test) + len(y_train) + len(y_test)))
+		h.write_report(f"The size of this dataset is %.1f" % ((len(X_train) + len(X_test) + len(y_train) + len(y_test))/2))
 
 		# create logs for Tensorboard
 		log_dir = "../logs/fit/" + datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -93,7 +107,8 @@ class Training():
 		model.summary()
 
 		# train the model
-		history = model.fit(
+		history = model.fit(X_train,
+			y_train,
 			validation_data=(X_test, y_test),
 			epochs=200,
 			batch_size=64, 
@@ -113,15 +128,17 @@ class Training():
 		# test model
 		predictions = model.predict(X_test)
 		results = model.evaluate(X_test, y_test)
-		report = classification_report(y_test, np.argmax(pred, axis=1), target_names=labels)
+		report = classification_report(y_test, np.argmax(predictions, axis=1), target_names=labels)
+
 		print(report)
 		h.write_report(report)
 
-		_, acc = model.evaluate(X_test, test_Y, verbose=0)
+		_, acc = model.evaluate(X_test, y_test, verbose=0)
 		print('> %.3f' % (acc * 100.0))
 		h.write_report('> %.3f' % (acc * 100.0))
 		h.plot_acc(history, X_train, y_train, op = 'normal')
 		print('test_loss:', results[0], 'test_accuracy:', results[1])
+		h.write_score(acc, results[1])
 
 		print("Confidence for each prediction: " + str(predictions))
 		h.write_report("Confidence for each prediction: " + str(predictions))
