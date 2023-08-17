@@ -66,3 +66,5 @@ class Predicting():
 			p = model.predict(padded_seqs)
 			print(float(p[0]))
 			h.write_report(float(p[0]))
+			print("Confidence for each prediction: " + str(p))
+			h.write_report("Confidence for each prediction: " + str(p))

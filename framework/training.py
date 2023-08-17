@@ -49,6 +49,8 @@ class Training():
 		h.write_report(report)
 		h.plot_acc(model, v_train, y_train, 'normal')
 		h.plot_loss(model)
+		print("Confidence for each prediction: " + str(prob))
+		h.write_report("Confidence for each prediction: " + str(prob))
 
 		# save the network to disk
 		print("[INFO] serializing network to '{}'...".format(args["path"]))
@@ -120,6 +122,9 @@ class Training():
 		h.write_report('> %.3f' % (acc * 100.0))
 		h.plot_acc(history, X_train, y_train, op = 'normal')
 		print('test_loss:', results[0], 'test_accuracy:', results[1])
+
+		print("Confidence for each prediction: " + str(predictions))
+		h.write_report("Confidence for each prediction: " + str(predictions))
 
 		return model
 
