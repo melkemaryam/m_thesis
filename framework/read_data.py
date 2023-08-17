@@ -32,11 +32,21 @@ class Read_data():
 
 	def train_test_data(self):
 
+		a = Args()
+		args = a.parse_arguments()
+
 		data = self.get_data()
 
-		# Features and Labels
-		X = data['tokenised']
-		y = data['agg_label']
+		if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm'):
+			# Features and Labels
+			X = data['tokenised']
+			y = pd.get_dummies(data['agg_label']).values
+
+		elif(args["model"] == 'log' or args["model"] == 'svm' or args["model"] == 'nb'):
+			# Features and Labels
+			X = data['tokenised']
+			y = data['agg_label']
+
 		X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)
 		print(X_train[:10])
 

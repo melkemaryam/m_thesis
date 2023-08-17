@@ -41,6 +41,8 @@ class Training():
 
 		# get values
 		X_train, X_test, y_train, y_test = r.train_test_data()
+		print(X_train.shape,y_train.shape)
+		print(X_test.shape,y_test.shape)
 
 		# train the network
 		print("[INFO] training network...")
@@ -84,6 +86,9 @@ class Training():
 		MAX_LENGTH = 256
 
 		X_train, X_test, y_train, y_test, tok = re.tokenise(MAX_LENGTH)
+		print(X_train.shape,y_train.shape)
+		print(X_test.shape,y_test.shape)
+
 		best_hyperparameters = t.get_best_parameters()
 
 		# train the network
@@ -110,7 +115,7 @@ class Training():
 		history = model.fit(X_train,
 			y_train,
 			validation_data=(X_test, y_test),
-			epochs=200,
+			epochs=10,
 			batch_size=64, 
 			callbacks=[callback, tensorboard],
 			verbose=1)
@@ -128,7 +133,7 @@ class Training():
 		# test model
 		predictions = model.predict(X_test)
 		results = model.evaluate(X_test, y_test)
-		report = classification_report(y_test, np.argmax(predictions, axis=1), target_names=labels)
+		report = classification_report(y_test.argmax(axis=1), np.argmax(predictions, axis=1), target_names=labels)
 
 		print(report)
 		h.write_report(report)

@@ -38,11 +38,11 @@ class Build_tf():
 
 		# train with one optimisation
 		elif (args["train"] == 'one'):
-			return self.build_net
+			return self.build_net()
 
 		# train without optimisation
 		elif (args["train"] == 'none'):
-			return self.build_net
+			return self.build_net()
 
 
 	def build_net_opt(self, hp):
@@ -74,13 +74,13 @@ class Build_tf():
 
 			self.add_first_conv(hp_filters)
 			self.add_convolution(hp_filters)
-			self.add_pooling(hp_dropout)
+			self.add_dropout(hp_dropout)
 			self.add_convolution(hp_filters)
 			self.add_convolution(hp_filters)
-			self.add_pooling(hp_dropout)
+			self.add_dropout(hp_dropout)
 			self.add_convolution(hp_filters)
 			self.add_convolution(hp_filters)
-			self.add_pooling(hp_dropout)
+			self.add_dropout(hp_dropout)
 			self.add_last_cnn_layer(hp_units, hp_dropout)
 
 		elif(args["model"] == 'lstm'):
@@ -126,29 +126,30 @@ class Build_tf():
 
 			self.add_first_conv(32)
 			self.add_convolution(32)
-			self.add_pooling(0.3)
+			self.add_dropout(0.3)
 			self.add_convolution(64)
 			self.add_convolution(64)
-			self.add_pooling(0.4)
+			self.add_dropout(0.4)
 			self.add_convolution(128)
 			self.add_convolution(128)
-			self.add_pooling(0.5)
+			self.add_dropout(0.5)
 			self.add_last_cnn_layer(128, 0.5)
 
 		elif(args["model"] == 'lstm'):
 
 			self.add_lstm(EMBED_SIZE, 0.5)
-			self.add_last_layer(24)
+			self.add_last_cnn_layer(24, 0.5)
 
 		elif(args["model"] == 'bilstm'):
 
 			self.add_bilstm(EMBED_SIZE, 0.5)
-			self.add_last_layer(24)
+			self.add_last_cnn_layer(24, 0.5)
 
 		elif(args["model"] == 'basic'):
 
-			self.add_pooling(0.2)
-			self.add_last_layer(24)
+			#self.model.add(GlobalAveragePooling1D())
+			self.add_dropout(0.2)
+			self.add_last_cnn_layer(24, 0.5)
 
 		# compile with inner optimiser
 		self.compile()
@@ -173,9 +174,8 @@ class Build_tf():
 		self.model.add(BatchNormalization(axis=-1))
 
 	# function for pooling
-	def add_pooling(self, dropout):
+	def add_dropout(self, dropout):
 
-		#self.model.add(GlobalAveragePooling1D())
 		self.model.add(Dropout(rate=dropout))
 
 	def add_lstm(self, EMBED_SIZE, dropout):
@@ -191,23 +191,25 @@ class Build_tf():
 	def add_last_layer(self, units):
 
 		self.model.add(Dense(units=units, activation='relu', kernel_initializer='he_uniform'))
-		self.model.add(Dense(1, "sigmoid"))
+		self.model.add(Dense(3, activation='softmax'))
+		#self.model.add(Dense(1, "sigmoid"))
 
 	# function for the last layer
 	def add_last_cnn_layer(self, units, dropout):
 
+		self.model.add(GlobalAveragePooling1D())
 		self.model.add(Flatten())
 		self.model.add(Dense(units=units, activation='relu', kernel_initializer='he_uniform'))
 		self.model.add(BatchNormalization())
 		self.model.add(Dropout(rate=dropout))
-		#self.model.add(Dense(3, activation='softmax'))
-		self.model.add(Dense(1, "sigmoid"))
+		self.model.add(Dense(3, activation='softmax'))
+		#self.model.add(Dense(1, "sigmoid"))
 
 	# function to compile with inner optimiser
 	def compile(self):
 
 		inop = Inner_opt()
-		op = inop.direct_adam()
+		op = inop.return_optimiser()
 
 		# compile model
 		print("[INFO] compiling model...")

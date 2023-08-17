@@ -36,11 +36,6 @@ if __name__ == '__main__':
 		# train, test, optimise, and predict with provided images
 		elif((args["train"] == "all" or args["train"] == "one" or args["train"] == "none")):
 
-			# get data
-			#data = re.return_data()
-			re.train_test_data()
-			#print(data.head())
-
 			if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm'):
 				tr.train_tf()
 
@@ -66,7 +61,9 @@ if __name__ == '__main__':
 # nb/w2v with training: python3 main.py -m nb -v w2v -d titles -tr none -pa ../output/nb_w2v.model
 
 # basic with training: python3 main.py -m basic -d titles -tr none -pa ../output/basic.model
-
+# cnn with training: python3 main.py -m cnn -d titles -tr none -pa ../output/cnn.model
+# lstm with training: python3 main.py -m lstm -d titles -tr none -pa ../output/lstm.model
+# bilstm with training: python3 main.py -m bilstm -d titles -tr none -pa ../output/bilstm.model
 
 
 

@@ -32,7 +32,7 @@ class Tuning():
 		if (args["optimiser"] == 'bayesian'):
 			return self.tuning_bayesian
 		elif (args["optimiser"] == 'hyperband'):
-			return self.tuning_hyperband
+			return self.tuning_hyperband()
 		elif (args["optimiser"] == 'random'):
 			return self.tuning_random_search
 
@@ -93,7 +93,7 @@ class Tuning():
 
 		# optimise with Hyperband
 		tuner = Hyperband(
-			b.return_model,
+			b.return_model(),
 			objective='accuracy',
 			max_epochs=10,
 			hyperband_iterations=1,
