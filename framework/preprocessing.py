@@ -117,7 +117,7 @@ class Preprocessing():
 
 		return data, path
 
-	def save_data(data):
+	def save_data(self, data):
 
 		arg = Args()
 		args = arg.parse_arguments()

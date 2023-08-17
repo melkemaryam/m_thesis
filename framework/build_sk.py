@@ -10,40 +10,15 @@ import numpy as np
 #import libraries and modules
 import io
 
-import tensorflow as tf
-from tensorboard.plugins.hparams import api as hp
-
-from tensorflow.keras.layers import Activation
-from tensorflow.keras.layers import BatchNormalization
-from tensorflow.keras.layers import Conv2D
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.layers import Dropout
-from tensorflow.keras.layers import Flatten
-from tensorflow.keras.layers import MaxPooling2D
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.preprocessing.sequence import pad_sequences
-
 from sklearn.svm import SVC
-from sklearn.model_selection import GridSearchCV, cross_val_score, KFold 
 from sklearn.linear_model import LogisticRegression
 from sklearn import metrics
-from sklearn.metrics import accuracy_score, roc_curve, auc, classification_report, recall_score, precision_score
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
-from sklearn.metrics import f1_score, roc_auc_score
 from sklearn.naive_bayes import GaussianNB, MultinomialNB, BernoulliNB
-from sklearn.preprocessing import LabelEncoder, StandardScaler
-from sklearn.preprocessing import label_binarize
-from sklearn.decomposition import PCA
-from sklearn.ensemble import AdaBoostClassifier
-from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.model_selection import train_test_split
 
 import gensim
 from gensim.models import Word2Vec
-from tqdm import tqdm_notebook as tqdm
 
 from read_data import Read_data
 from helper import Helper
@@ -59,47 +34,41 @@ class Build_sk():
 
 		arg = Args()
 		args = arg.parse_arguments()
-		C = 1
 
-		if (args["model"] == 'tf'):
-
-			# train with all optimisations
-			if (args["train"] == 'all'):
-				return self.build_net_opt
-
-			# train with one optimisation
-			elif (args["train"] == 'one'):
-				return self.build_net
-
-			# train without optimisation
-			elif (args["train"] == 'none'):
-				return self.build_net
-
-		else:
+		if (args["model"] == 'log' or args["model"] == 'svm' or args["model"] == 'nb'):
 
 			# train with logistic regression
 			if (args["model"] == 'log'):
-
-				# create logistic regression model 
-				model = LogisticRegression(n_jobs=1, C = C, max_iter = 1000, class_weight="balanced")
-
-				return model
+				return self.build_log
 
 			# train with support vector machine
 			elif (args["model"] == 'svm'):
-				
-				# create support vector classifier
-				model = SVC(kernel='linear', probability=True, C = C, gamma = "auto")
-
-				return model
+				return self.build_svm
 
 			# train with naive bayes
 			elif (args["model"] == 'nb'):
-				
-				# create gaussian naive bayes
-				model = GaussianNB()
+				return self.build_nb
 
-				return model
+	def build_log(self):
+
+		# create logistic regression model 
+		self.model = LogisticRegression(n_jobs=1, C = 1, max_iter = 1000, class_weight="balanced")
+
+		return self.model
+
+	def build_svm(self):
+
+		# create support vector classifier
+		self.model = SVC(kernel='linear', probability=True, C = 1, gamma = "auto")
+
+		return self.model
+
+	def build_nb(self):
+		
+		# create gaussian naive bayes
+		self.model = GaussianNB()
+
+		return self.model
 
 	def get_vector(self, X_train, X_test):
 
@@ -169,37 +138,3 @@ class Build_sk():
 					v_test.append(np.zeros(100, dtype=float))
 
 			return words, v_train, v_test
-
-			
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

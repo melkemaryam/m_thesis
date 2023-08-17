@@ -9,6 +9,10 @@ import os
 import glob
 import collections
 
+import tensorflow as tf
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+
 from sklearn.model_selection import train_test_split
 
 from preprocessing import Preprocessing
@@ -16,12 +20,18 @@ from preprocessing import Preprocessing
 
 class Read_data():
 
-	def __init__(self, X_train, X_test, y_train, y_test):
+	def __init__(self, X_train, X_test, y_train, y_test, word2idx):
 
 		self.X_train = X_train
 		self.X_test = X_test
 		self.y_train = y_train
 		self.y_test = y_test
+		self.word2idx = word2idx
+
+	def get_data(self, data)
+
+		self.train_test_data(data)
+		self.prepare_data(data)
 
 	def train_test_data(self, data):
 
@@ -31,6 +41,31 @@ class Read_data():
 		self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)
 
 		return self.X_train, self.X_test, self.y_train, self.y_test
+
+	def tokenise(self, max_len):
+
+		# get values
+		X_train = self.get_x_train()
+		X_test = self.get_x_test()
+		y_train = self.get_y_train()
+		y_test = self.get_y_test()
+
+		#preprocess 
+		tokenizer = Tokenizer(num_words=10000, oov_token= "<OOV>")
+		tokenizer.fit_on_texts(X_train)
+		word_index = tokenizer.word_index
+		X_train = tokenizer.texts_to_sequences(X_train)
+		X_train = pad_sequences(X_train, maxlen=max_len, padding='post', truncating='post')
+		X_test = tokenizer.texts_to_sequences(X_test)
+		X_test = pad_sequences(X_test, maxlen=max_len, padding='post', truncating='post')
+
+		# convert lists into numpy arrays to make it work with TensorFlow 
+		X_train = np.array(X_train)
+		y_train = np.array(y_train)
+		X_test = np.array(X_test)
+		y_test = np.array(y_test)
+
+		return X_train, X_test, y_train, y_test, tokenizer
 
 	def get_x_train(self):
 		return self.X_train
@@ -43,6 +78,9 @@ class Read_data():
 
 	def get_y_test(self):
 		return self.y_test
+
+	def get_word2idx(self):
+		return self.word2idx
 
 	def adjust_data(self, data):
 
@@ -60,14 +98,14 @@ class Read_data():
 		# get titles only
 		if (args["preprocess"] == 'no'):
 
-			df_article = pd.read_csv("/Users/Hannah1/Downloads/article_df_final.csv", sep='\t', lineterminator='\n')
+			df_article = pd.read_csv("/Users/Hannah1/Downloads/articles_with_labels.csv", sep='\t', lineterminator='\n')
 			data = self.adjust_data(df_article)
 
 		elif (args["preprocess"] == 'yes'):
 
 			p = Preprocessing()
 
-			df_article = pd.read_csv("/Users/Hannah1/Downloads/article_df_final.csv", sep='\t', lineterminator='\n')
+			df_article = pd.read_csv("/Users/Hannah1/Downloads/articles_with_labels.csv", sep='\t', lineterminator='\n')
 			data = self.adjust_data(df_article)
 			data, path = p.apply_preprocessing(data)
 			df_article = pd.read_csv(path, sep='\t', lineterminator='\n')
@@ -173,7 +211,7 @@ class Read_data():
 		text = text['tokenised']
 	    
 		# create the empty dictionary
-		word2idx = dict()
+		self.word2idx = dict()
 
 		# iterate through the entire corpus to create the list of words
 		#for index, row in text.items():
@@ -188,10 +226,10 @@ class Read_data():
 
 		# iterate through the list of words and add each word with the corresponding index to the dictionary
 		for idx, word in enumerate(word_list):
-			word2idx[word] = idx
+			self.word2idx[word] = idx
 
 		# return the final dictionary
-		return word2idx
+		return self.word2idx
 
 	def get_words(self, text):
 

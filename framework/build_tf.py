@@ -13,7 +13,10 @@ from tensorflow.keras.layers import Dropout
 from tensorflow.keras.layers import Flatten
 from tensorflow.keras.layers import MaxPooling2D
 from tensorflow.keras.models import Sequential
+from keras.layers import Lambda, GlobalAveragePooling1D, Dense, Embedding, Conv1D, LSTM, Bidirectional
+from keras import backend as K
 from inner_opt import Inner_opt
+from read_data import Read_data
 
 # arguments: choose between normal, lstm, cnn
 
@@ -44,6 +47,11 @@ class Build_tf():
 
 	def build_net_opt(self, hp):
 
+		# build the model layer by layer
+		re = Read_data()
+		a = Args()
+		args = a.parse_arguments()
+
 		# initialise sequential model
 		self.model = Sequential()
 
@@ -51,32 +59,45 @@ class Build_tf():
 		hp_filters = hp.Choice('filters', values = [32, 64, 128, 256, 512])
 		hp_units = hp.Choice('units', values = [32, 64, 128, 256, 512])
 		hp_dropout = hp.Choice('rate', values = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6])
+		#hp_max_len = hp.Choice('input_length', values = [128, 256, 512, 1024])
+		hp_embed_size = hp.Choice('output_dim', values = [64, 100, 150])
+
+		MAX_LENGTH = 256
+		VOCAB_SIZE = re.get_word2idx(MAX_LENGTH)
 
 		# build the model layer by layer
 		# First layer
-		self.add_first_layer(hp_filters)
+		self.add_embedding(VOCAB_SIZE, hp_embed_size, MAX_LENGTH, hp_dropout)
 
-		# Second layer
-		self.add_convolution(hp_filters)
-		self.add_pooling(hp_dropout)
+		# get titles only
+		if(args["model"] == 'cnn'):
 
-		# Third layer
-		self.add_convolution(hp_filters)
+			self.add_first_conv(hp_filters)
+			self.add_convolution(hp_filters)
+			self.add_pooling(hp_dropout)
+			self.add_convolution(hp_filters)
+			self.add_convolution(hp_filters)
+			self.add_pooling(hp_dropout)
+			self.add_convolution(hp_filters)
+			self.add_convolution(hp_filters)
+			self.add_pooling(hp_dropout)
+			self.add_last_cnn_layer(hp_units, hp_dropout)
 
-		# Fourth layer
-		self.add_convolution(hp_filters)
-		self.add_pooling(hp_dropout)
+		elif(args["model"] == 'lstm'):
 
-		# Fifth layer
-		self.add_convolution(hp_filters)
+			self.add_lstm(hp_embed_size, hp_dropout)
+			self.add_last_layer(hp_units)
 
-		# Sixth layer
-		self.add_convolution(hp_filters)
-		self.add_pooling(hp_dropout)
+		elif(args["model"] == 'bilstm'):
 
-		# add last layer
-		self.add_last_layer(hp_units, hp_dropout)
-		
+			self.add_bilstm(hp_embed_size, hp_dropout)
+			self.add_last_layer(hp_units)
+
+		elif(args["model"] == 'basic'):
+
+			self.add_pooling(hp_dropout)
+			self.add_last_layer(hp_units)
+
 		# compile with inner optimiser
 		self.compile()
 
@@ -85,65 +106,102 @@ class Build_tf():
 
 	def build_net(self):
 
+		re = Read_data()
+		a = Args()
+		args = a.parse_arguments()
+
+		MAX_LENGTH = 256 # or 200
+		EMBED_SIZE = 100 # or 64
+		VOCAB_SIZE = re.get_word2idx(MAX_LENGTH)
+
 		# initialise sequential model
 		self.model = Sequential()
 
 		# build the model layer by layer
 		# First layer
-		self.add_first_layer(32)
+		self.add_embedding(VOCAB_SIZE, EMBED_SIZE, MAX_LENGTH, 0.2)
 
-		# Second layer
-		self.add_convolution(32)
-		self.add_pooling(0.2)
+		# get titles only
+		if(args["model"] == 'cnn'):
 
-		# Third layer
-		self.add_convolution(64)
+			self.add_first_conv(32)
+			self.add_convolution(32)
+			self.add_pooling(0.3)
+			self.add_convolution(64)
+			self.add_convolution(64)
+			self.add_pooling(0.4)
+			self.add_convolution(128)
+			self.add_convolution(128)
+			self.add_pooling(0.5)
+			self.add_last_cnn_layer(128, 0.5)
 
-		# Fourth layer
-		self.add_convolution(64)
-		self.add_pooling(0.3)
+		elif(args["model"] == 'lstm'):
 
-		# Fifth layer
-		self.add_convolution(128)
+			self.add_lstm(EMBED_SIZE, 0.5)
+			self.add_last_layer(24)
 
-		# Sixth layer
-		self.add_convolution(128)
-		self.add_pooling(0.4)
+		elif(args["model"] == 'bilstm'):
 
-		# add last layer
-		self.add_last_layer(128, 0.5)
+			self.add_bilstm(EMBED_SIZE, 0.5)
+			self.add_last_layer(24)
+
+		elif(args["model"] == 'basic'):
+
+			self.add_pooling(0.2)
+			self.add_last_layer(24)
 
 		# compile with inner optimiser
 		self.compile()
 
 		return self.model
 
-	# function for the first layer
-	def add_first_layer(self, filters):
+	def add_embedding(self, VOCAB_SIZE, EMBED_SIZE, MAX_LENGTH, dropout):
 
-		self.model.add(Conv2D(filters=filters, kernel_size=(5, 5), activation='relu', kernel_initializer='he_uniform', padding='same', input_shape=(32, 32, 3)))
+		self.model.add(Embedding(VOCAB_SIZE, EMBED_SIZE, mask_zero=True, input_length = MAX_LENGTH))
+		self.model.add(Dropout(rate=dropout))
+
+	# function for the first layer
+	def add_first_conv(self, filters):
+
+		self.model.add(Conv1D(filters=filters, kernel_size=(5, 5), activation='relu', kernel_initializer='he_uniform', padding='same'))
 		self.model.add(BatchNormalization(axis=-1))
 
 	# function for the next layer
 	def add_convolution(self, filters):
 
-		self.model.add(Conv2D(filters=filters, kernel_size=(3, 3), activation='relu', kernel_initializer='he_uniform', padding='same'))
+		self.model.add(Conv1D(filters=filters, kernel_size=(3, 3), activation='relu', kernel_initializer='he_uniform', padding='same'))
 		self.model.add(BatchNormalization(axis=-1))
 
 	# function for pooling
 	def add_pooling(self, dropout):
 
-		self.model.add(MaxPooling2D((2, 2)))
+		self.model.add(GlobalAveragePooling1DMasked())
 		self.model.add(Dropout(rate=dropout))
 
+	def add_lstm(self, EMBED_SIZE, dropout):
+
+		self.model.add(LSTM(EMBED_SIZE))
+		self.model.add(Dropout(rate=dropout))
+
+	def add_bilstm(self, EMBED_SIZE, dropout):
+
+		self.model.add(Bidirectional(LSTM(EMBED_SIZE)))
+		self.model.add(Dropout(rate=dropout))
+
+	def add_last_layer(self, units):
+
+		self.model.add(Dense(units=units, activation='relu', kernel_initializer='he_uniform'))
+		self.model.add(Dense(1, "sigmoid"))
+
 	# function for the last layer
-	def add_last_layer(self, units, dropout):
+	def add_last_cnn_layer(self, units, dropout):
 
 		self.model.add(Flatten())
 		self.model.add(Dense(units=units, activation='relu', kernel_initializer='he_uniform'))
 		self.model.add(BatchNormalization())
 		self.model.add(Dropout(rate=dropout))
-		self.model.add(Dense(3, activation='softmax'))
+		#self.model.add(Dense(3, activation='softmax'))
+		self.model.add(Dense(1, "sigmoid"))
 
 	# function to compile with inner optimiser
 	def compile(self):
@@ -155,4 +213,9 @@ class Build_tf():
 		self.model.compile(loss="categorical_crossentropy", optimizer=inop.return_optimiser, metrics=["accuracy"])
 
 
-
+class GlobalAveragePooling1DMasked(GlobalAveragePooling1D):
+    def call(self, x, mask=None):
+        if mask != None:
+            return K.sum(x, axis=1) / K.sum(mask, axis=1)
+        else:
+            return super().call(x)
