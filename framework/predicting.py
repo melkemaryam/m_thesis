@@ -1,3 +1,16 @@
+"""
+
+class: Predicting
+
+methods:
+* load_net()
+* prediction_process()
+
+purpose:
+* make predictions using a specific model
+
+"""
+
 # import packages
 import argparse
 from arguments import Args

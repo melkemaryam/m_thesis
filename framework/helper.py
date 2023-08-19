@@ -1,3 +1,22 @@
+"""
+
+class: Helper
+
+methods:
+* write_report()
+* write_score()
+* set_model()
+* check_path()
+* plot_freq()
+* plot_acc()
+* plot_loss()
+
+
+purpose:
+* store helping functions used by other classes
+
+"""
+
 # import packages
 import argparse
 from arguments import Args

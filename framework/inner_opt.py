@@ -1,3 +1,15 @@
+"""
+
+class: Inner_opt
+
+methods:
+* return_optimiser()
+
+purpose:
+* get correct optimiser
+
+"""
+
 # import packages
 import argparse
 from arguments import Args

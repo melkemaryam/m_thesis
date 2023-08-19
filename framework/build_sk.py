@@ -1,3 +1,16 @@
+"""
+
+class: Build_sk
+
+methods:
+* return_model()
+* get_vector()
+
+purpose:
+* build a model using the sci-kit learn library
+
+"""
+
 # import packages
 import argparse
 from arguments import Args

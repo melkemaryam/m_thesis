@@ -1,3 +1,21 @@
+"""
+
+class: Tuning
+
+methods:
+* get_best_parameters()
+* return_tuner()
+* search_tuner()
+* tuner_info()
+* tuning_random_search()
+* tuning_hyperband()
+* tuning_bayesian()
+
+purpose:
+* perform hyperparameter optimisation
+
+"""
+
 # import packages
 import argparse
 from arguments import Args

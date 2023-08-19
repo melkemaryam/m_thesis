@@ -1,3 +1,27 @@
+"""
+
+class: Hyperband
+
+methods:
+* main_train_net()
+* build_net()
+* add_embedding()
+* add_first_conv()
+* add_convolution()
+* add_dropout()
+* add_lstm()
+* add_bilstm()
+* add_last_layer()
+* add_last_cnn_layer()
+* tuning()
+* training()
+* write_report
+
+purpose:
+* use hyperband hyperparameter optimisation
+
+"""
+
 # set the matplotlib backend so figures can be saved in the background
 import matplotlib
 #import matplotlib.pyplot as plt

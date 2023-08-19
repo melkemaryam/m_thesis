@@ -1,3 +1,26 @@
+"""
+
+class: Build_tf
+
+methods:
+* return_model
+* build_net_opt
+* build_net
+* add_embedding()
+* add_first_conv()
+* add_convolution()
+* add_dropout()
+* add_lstm()
+* add_bilstm()
+* add_last_layer()
+* add_last_cnn_layer()
+* compile()
+
+purpose:
+* build models using the tensorflow library
+
+"""
+
 # import packages
 import argparse
 from arguments import Args

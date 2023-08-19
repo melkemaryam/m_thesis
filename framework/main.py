@@ -1,3 +1,13 @@
+"""
+
+methods:
+* main
+
+purpose:
+* run the entire framework
+
+"""
+
 from arguments import Args
 from build_sk import Build_sk
 from build_tf import Build_tf

@@ -1,3 +1,15 @@
+"""
+
+class: Args
+
+methods:
+* parse_arguments()
+
+purpose:
+* get arguments from function call
+
+"""
+
 import argparse
 
 

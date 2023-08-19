@@ -1,3 +1,16 @@
+"""
+
+class: Preprocessing
+
+methods:
+* pre_process()
+* apply_preprocess()
+
+purpose:
+* pre-process given data
+
+"""
+
 # import packages
 import argparse
 from arguments import Args

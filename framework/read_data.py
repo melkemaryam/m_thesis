@@ -1,3 +1,26 @@
+"""
+
+class: Read_data
+
+methods:
+* get_data()
+* train_test_data()
+* tokenise()
+* adjust_data()
+* get_articles()
+* get_titles()
+* return_data()
+* return_freq()
+* prepare_data()
+* get_words()
+* prepare_sent()
+* get_idx2word()
+
+purpose:
+* process and return specific parts of the dataset
+
+"""
+
 # import packages
 import argparse
 from arguments import Args

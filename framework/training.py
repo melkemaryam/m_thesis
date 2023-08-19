@@ -1,3 +1,16 @@
+"""
+
+class: Training
+
+methods:
+* train_sk()
+* train_tf()
+
+purpose:
+* train the created models
+
+"""
+
 from sklearn.metrics import classification_report
 from sklearn.metrics import f1_score
 from sklearn.metrics import accuracy_score
