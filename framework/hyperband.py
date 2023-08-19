@@ -33,14 +33,10 @@ from datetime import datetime
 import numpy as np
 import os
 import random
-import cv2
-import imutils
-from imutils import paths
+
 import kerastuner
 from kerastuner.tuners import RandomSearch, Hyperband, BayesianOptimization
-from skimage import exposure
-from skimage import io
-from skimage import transform
+
 from sklearn.metrics import classification_report
 from sklearn.metrics import f1_score
 import tensorflow as tf
