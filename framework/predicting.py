@@ -28,7 +28,7 @@ class Predicting():
 		# load the trained model
 		print("[INFO] loading model...")
 
-		if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm'):
+		if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm' or args["model"] == 'rnn'):
 			model = load_model(args["path"])
 
 		elif(args["model"] == 'log' or args["model"] == 'svm' or args["model"] == 'nb'):
@@ -52,7 +52,7 @@ class Predicting():
 		MAX_LENGTH = 256
 		model = self.load_net()
 
-		if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm'):
+		if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm' or args["model"] == 'rnn'):
 			X_train, X_test, y_train, y_test = r.train_test_data()
 			tokeniser = Tokenizer(num_words=10000, oov_token= "<OOV>")
 			tokeniser.fit_on_texts(X_train)
@@ -62,7 +62,7 @@ class Predicting():
 			X_train, X_test, y_train, y_test = r.train_test_data()
 			tokeniser = Tokenizer(num_words=10000, oov_token= "<OOV>")
 			tokeniser.fit_on_texts(X_train)
-			MAX_LENGTH = 1000
+			MAX_LENGTH = 256
 
 		for x in X_test[:10]:
 

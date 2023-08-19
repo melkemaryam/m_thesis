@@ -13,7 +13,7 @@ from tensorflow.keras.layers import Dropout
 from tensorflow.keras.layers import Flatten
 from tensorflow.keras.layers import MaxPooling2D
 from tensorflow.keras.models import Sequential
-from keras.layers import Lambda, GlobalAveragePooling1D, Dense, Embedding, Conv1D, LSTM, Bidirectional
+from keras.layers import Lambda, GlobalAveragePooling1D, Dense, Embedding, Conv1D, LSTM, Bidirectional, GlobalMaxPooling1D
 from keras import backend as K
 from inner_opt import Inner_opt
 from read_data import Read_data
@@ -93,6 +93,11 @@ class Build_tf():
 			self.add_bilstm(hp_embed_size, hp_dropout)
 			self.add_last_layer(hp_units)
 
+		elif(args["model"] == 'rnn'):
+
+			self.add_rnn(hp_embed_size, hp_dropout)
+			self.add_last_cnn_layer(hp_units, hp_dropout)
+
 		elif(args["model"] == 'basic'):
 
 			self.add_pooling(hp_dropout)
@@ -126,14 +131,17 @@ class Build_tf():
 
 			self.add_first_conv(32)
 			self.add_convolution(32)
-			self.add_dropout(0.3)
+			self.add_dropout(0.1)
 			self.add_convolution(64)
 			self.add_convolution(64)
-			self.add_dropout(0.4)
+			self.add_dropout(0.2)
 			self.add_convolution(128)
 			self.add_convolution(128)
 			self.add_dropout(0.5)
-			self.add_last_cnn_layer(128, 0.5)
+			self.add_convolution(128)
+			self.add_convolution(128)
+			self.add_dropout(0.5)
+			self.add_last_cnn_layer(24, 0.3)
 
 		elif(args["model"] == 'lstm'):
 
@@ -143,6 +151,11 @@ class Build_tf():
 		elif(args["model"] == 'bilstm'):
 
 			self.add_bilstm(EMBED_SIZE, 0.5)
+			self.add_last_cnn_layer(24, 0.5)
+
+		elif(args["model"] == 'rnn'):
+
+			self.add_rnn(EMBED_SIZE, 0.5)
 			self.add_last_cnn_layer(24, 0.5)
 
 		elif(args["model"] == 'basic'):
@@ -158,7 +171,15 @@ class Build_tf():
 
 	def add_embedding(self, VOCAB_SIZE, EMBED_SIZE, MAX_LENGTH, dropout):
 
-		self.model.add(Embedding(VOCAB_SIZE, EMBED_SIZE, mask_zero=True, input_length = MAX_LENGTH))
+		a = Args()
+		args = a.parse_arguments()
+
+		# FOR BILSTM WITHOUT MASK ZERO
+		if(args["model"] == 'bilstm' or args["model"] == 'rnn'):
+			self.model.add(Embedding(VOCAB_SIZE, EMBED_SIZE, mask_zero=False, input_length = MAX_LENGTH))
+		else:
+			self.model.add(Embedding(VOCAB_SIZE, EMBED_SIZE, mask_zero=True, input_length = MAX_LENGTH))
+		
 		self.model.add(Dropout(rate=dropout))
 
 	# function for the first layer
@@ -188,6 +209,12 @@ class Build_tf():
 		self.model.add(Bidirectional(LSTM(EMBED_SIZE)))
 		self.model.add(Dropout(rate=dropout))
 
+	def add_rnn(self, EMBED_SIZE, dropout):
+
+		self.model.add(Bidirectional(LSTM(EMBED_SIZE, return_sequences=True)))
+		self.model.add(Bidirectional(LSTM(50)))
+		self.model.add(Dropout(rate=dropout))
+
 	def add_last_layer(self, units):
 
 		self.model.add(Dense(units=units, activation='relu', kernel_initializer='he_uniform'))
@@ -197,7 +224,7 @@ class Build_tf():
 	# function for the last layer
 	def add_last_cnn_layer(self, units, dropout):
 
-		self.model.add(GlobalAveragePooling1D())
+		#self.model.add(GlobalMaxPooling1D())
 		self.model.add(Flatten())
 		self.model.add(Dense(units=units, activation='relu', kernel_initializer='he_uniform'))
 		self.model.add(BatchNormalization())

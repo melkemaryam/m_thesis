@@ -26,7 +26,7 @@ class Read_data():
 		data = self.return_data()
 		print(data.head())
 
-		data = data[:1000]
+		#data = data[:1000]
 
 		return data
 
@@ -78,7 +78,7 @@ class Read_data():
 
 		data.fillna('', inplace=True)
 		data.drop(columns = ['Unnamed: 0'], inplace=True)
-		data = data.iloc[:20000]
+		#data = data.iloc[:20000]
 
 		return data
 
@@ -113,8 +113,8 @@ class Read_data():
 		# get titles only
 		if (args["preprocess"] == 'no'):
 
-			df_article = pd.read_csv("/Users/Hannah1/My Drive/Enigma/m_thesis/info/titles_with_labels.csv", sep='\t', lineterminator='\n')
-			data = self.adjust_data(df_article)
+			df_title = pd.read_csv("/Users/Hannah1/My Drive/Enigma/m_thesis/info/titles_with_labels.csv", sep='\t', lineterminator='\n')
+			data = self.adjust_data(df_title)
 
 		elif (args["preprocess"] == 'yes'):
 

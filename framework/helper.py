@@ -119,7 +119,7 @@ class Helper():
 		# close previous plot
 		plt.close()
 
-		if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm'):
+		if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm' or args["model"] == 'rnn'):
 
 			plot_history(model.history)
 			plt.title('Accuracy')
@@ -151,7 +151,7 @@ class Helper():
 		# close previous plot
 		plt.close()
 
-		if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm'):
+		if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm' or args["model"] == 'rnn'):
 
 			plt.plot(model.history.history["loss"], label="training loss")
 			plt.plot(model.history.history["val_loss"], label="validation loss")

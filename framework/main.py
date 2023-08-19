@@ -8,8 +8,12 @@ from preprocessing import Preprocessing
 from predicting import Predicting
 from inner_opt import Inner_opt
 from helper import Helper
+
+from hyperband import Hyper_band
+from bayesian import Bayesian
 # import packages
 import argparse
+from randoms import Randoms
 
 import os
 
@@ -28,6 +32,9 @@ if __name__ == '__main__':
 		he = Helper()
 		a = Args()
 		args = a.parse_arguments()
+		hb = Hyper_band()
+		ba = Bayesian()
+		rs = Randoms()
 
 		# predict images only with privided folder
 		if(args["train"] == 'pred'):
@@ -36,8 +43,11 @@ if __name__ == '__main__':
 		# train, test, optimise, and predict with provided images
 		elif((args["train"] == "all" or args["train"] == "one" or args["train"] == "none")):
 
-			if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm'):
-				tr.train_tf()
+			if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm' or args["model"] == 'rnn'):
+				#tr.train_tf()
+				#hb.main_train_net()
+				#ba.main_train_net()
+				rs.main_train_net()
 
 			elif(args["model"] == 'log' or args["model"] == 'svm' or args["model"] == 'nb'):
 				tr.train_sk()

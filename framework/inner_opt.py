@@ -41,7 +41,7 @@ class Inner_opt():
 	def direct_adam(self):
 
 		# initialise the optimiser
-		optimiser = Adam(learning_rate=0.001)
+		optimiser = Adam(learning_rate=0.00001, clipnorm=1.)
 
 		return optimiser
 
@@ -58,7 +58,7 @@ class Inner_opt():
 	def direct_sgd(self):
 
 		# initialise the optimiser
-		optimiser = SGD(learning_rate=0.001)
+		optimiser = SGD(learning_rate=0.0001)
 
 		return optimiser
 

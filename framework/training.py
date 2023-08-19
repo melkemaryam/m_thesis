@@ -12,6 +12,7 @@ import tensorflow as tf
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.callbacks import TensorBoard
 from tensorflow.keras.losses import MSE
+print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
 from preprocessing import Preprocessing
 from helper import Helper
@@ -115,8 +116,8 @@ class Training():
 		history = model.fit(X_train,
 			y_train,
 			validation_data=(X_test, y_test),
-			epochs=10,
-			batch_size=64, 
+			epochs=100,
+			batch_size=512, 
 			callbacks=[callback, tensorboard],
 			verbose=1)
 
