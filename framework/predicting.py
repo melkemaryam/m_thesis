@@ -18,6 +18,7 @@ from arguments import Args
 import numpy as np
 import os
 import random
+import pandas as pd
 
 import tensorflow as tf
 from tensorflow.keras.preprocessing.text import Tokenizer
@@ -41,7 +42,7 @@ class Predicting():
 		# load the trained model
 		print("[INFO] loading model...")
 
-		if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm' or args["model"] == 'rnn'):
+		if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm' or args["model"] == 'rnn' or args["model"] == 'bert'):
 			model = load_model(args["path"])
 
 		elif(args["model"] == 'log' or args["model"] == 'svm' or args["model"] == 'nb'):
@@ -62,40 +63,78 @@ class Predicting():
 		h.write_report("[INFO] predicting...")
 
 		labels = h.get_labels()
-		MAX_LENGTH = 256
 		model = self.load_net()
 
-		if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm' or args["model"] == 'rnn'):
-			X_train, X_test, y_train, y_test = r.train_test_data()
-			tokeniser = Tokenizer(num_words=10000, oov_token= "<OOV>")
-			tokeniser.fit_on_texts(X_train)
+		new_data = pd.read_csv("../abcnews-date-text.csv")
+		new_data = new_data['headline_text']
+
+		tokeniser = Tokenizer(num_words=10000, oov_token= "<OOV>")
+		tokeniser.fit_on_texts(new_data)
+
+		if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm' or args["model"] == 'rnn' or args["model"] == 'bert'):
+			
+			MAX_LENGTH = 256
 
 		elif(args["model"] == 'log' or args["model"] == 'svm' or args["model"] == 'nb'):
-			# get values
-			X_train, X_test, y_train, y_test = r.train_test_data()
-			tokeniser = Tokenizer(num_words=10000, oov_token= "<OOV>")
-			tokeniser.fit_on_texts(X_train)
+	
 			MAX_LENGTH = 1000
 
-		for x in X_test[:10]:
+		pos_count = 0
+		neg_count = 0
+		neu_count = 0
+		x_count = 0
+
+		for x in new_data[:100]:
 
 			print(x)
 			h.write_report(x)
 			sequences = tokeniser.texts_to_sequences(x)
 			padded_seqs = pad_sequences(sequences, maxlen=MAX_LENGTH, padding='post', truncating='post')
 			p = model.predict(padded_seqs)
+
+			if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm' or args["model"] == 'rnn' or args["model"] == 'bert'):
 			
-			j = p.argmax(axis=1)[0]
-			label = labels[j]
+				j = p.argmax(axis=1)[0]
+				label = labels[j]
 
-			print(p)
-			h.write_report(p)
+				print(p[0])
+				h.write_report(p[0])
 
-			print(j)
-			h.write_report(j)
+				print(p)
+				h.write_report(p)
 
-			print(label)
-			h.write_report(label)
-			
-			print("Confidence for each prediction: " + str(p[0]))
-			h.write_report("Confidence for each prediction: " + str(p[0]))
+				print(j)
+				h.write_report(j)
+
+				print(label)
+				h.write_report(label)
+
+				h.write_pred(j, x)
+
+				if j == 0:
+					neg_count += 1
+
+				elif j == 1:
+					pos_count += 1
+
+				elif j == 2:
+					neu_count += 1
+
+				x_count += 1
+
+			elif(args["model"] == 'log' or args["model"] == 'svm' or args["model"] == 'nb'):
+	
+				print(p)
+				h.write_report(p)
+
+
+		print("Number of negative predictions: " + str(neg_count))
+		h.write_report("Number of negative predictions: " + str(neg_count))
+		print("Number of positive predictions: " + str(pos_count))
+		h.write_report("Number of positive predictions: " + str(pos_count))
+		print("Number of neutral predictions: " + str(neu_count))
+		h.write_report("Number of neutral predictions: " + str(neu_count))
+		print("Number of all predictions: " + str(x_count))
+		h.write_report("Number of neutral predictions: " + str(x_count))
+		print("Model used: " + str(args["model"]))
+		h.write_report("Model used: " + str(args["model"]))

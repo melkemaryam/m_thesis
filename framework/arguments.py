@@ -18,7 +18,7 @@ class Args():
 	def parse_arguments(self):
 		# create argument parser
 		ap = argparse.ArgumentParser()
-		ap.add_argument("-m", "--model", default='lstm', choices=['log', 'svm', 'nb', 'basic', 'cnn', 'lstm', 'bilstm', 'rnn'], required=False, help="choose model")
+		ap.add_argument("-m", "--model", default='lstm', choices=['log', 'svm', 'nb', 'basic', 'cnn', 'lstm', 'bilstm', 'rnn', 'bert'], required=False, help="choose model")
 		ap.add_argument("-v", "--vector", default='tfidf', choices=['tfidf', 'count', 'w2v'], required=False, help="choose vectoriser")
 		ap.add_argument("-op", "--optimiser", default='hyperband', choices=['boost', 'bayesian', 'hyperband', 'random'], required=False, help="optimisation method for classifier")
 		ap.add_argument("-inop", "--inner_optimiser", default='adam', choices=['adam', 'sgd', 'rms'], required=False, help="inner optimisation method for classifier")

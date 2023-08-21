@@ -45,12 +45,32 @@ class Helper():
 
 		print("[INFO] report written")
 
-	def write_pred(self, report):
+	def write_pred(self, label, report):
 
-		# create report
-		file = open("../reports/pos_" + datetime.now().strftime("%Y%m%d-%H%M") + ".md", "a")
+		# get arguments
+		arg = Args()
+		args = arg.parse_arguments()
+
+		# save arguments as variables
+		m_name = args["model"]
+
+		if label == 0:
+
+			# create report
+			file = open("../predictions/neg_" + m_name + ".md", "a")
+
+		elif label == 1:
+
+			# create report
+			file = open("../predictions/pos_" + m_name + ".md", "a")
+
+		elif label == 2:
+
+			# create report
+			file = open("../predictions/neu_" + m_name + ".md", "a")
 
 		file.write(str(report))
+		file.write("\n")
 		file.write("\n")
 		file.close()
 
