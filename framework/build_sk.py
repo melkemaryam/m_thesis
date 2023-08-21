@@ -89,8 +89,8 @@ class Build_sk():
 			# change type to array if model is naive bayes
 			if (args["model"] == 'nb'):
 
-				v_train = v_train.toarray()
-				v_test = v_test.toarray()
+				v_train = v_train.reshape(-1, 1)
+				v_test = v_test.reshape(-1, 1)
 
 			return vector, v_train, v_test
 
@@ -138,5 +138,11 @@ class Build_sk():
 					v_test.append(v.mean(axis=0))
 				else:
 					v_test.append(np.zeros(100, dtype=float))
+
+			# change type to array if model is naive bayes
+			if (args["model"] == 'nb'):
+
+				v_train = v_train.toarray()
+				v_test = v_test.toarray()
 
 			return words, v_train, v_test
