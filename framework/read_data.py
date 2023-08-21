@@ -49,7 +49,7 @@ class Read_data():
 		data = self.return_data()
 		print(data.head())
 
-		#data = data[:1000]
+		#data = data[:8000]
 
 		return data
 
@@ -248,10 +248,11 @@ class Read_data():
 		# return the final dictionary
 		return word2idx
 
-	def get_words(self, text):
+	def get_words(self):
 
 		# create a temporary list that includes all words
 		word_list = []
+		text = self.get_data()
 		text = text['tokenised']
 
 		# iterate through the entire corpus to create the list of words

@@ -75,7 +75,7 @@ class Predicting():
 			X_train, X_test, y_train, y_test = r.train_test_data()
 			tokeniser = Tokenizer(num_words=10000, oov_token= "<OOV>")
 			tokeniser.fit_on_texts(X_train)
-			MAX_LENGTH = 256
+			MAX_LENGTH = 1000
 
 		for x in X_test[:10]:
 
@@ -84,5 +84,18 @@ class Predicting():
 			sequences = tokeniser.texts_to_sequences(x)
 			padded_seqs = pad_sequences(sequences, maxlen=MAX_LENGTH, padding='post', truncating='post')
 			p = model.predict(padded_seqs)
+			
+			j = p.argmax(axis=1)[0]
+			label = labels[j]
+
+			print(p)
+			h.write_report(p)
+
+			print(j)
+			h.write_report(j)
+
+			print(label)
+			h.write_report(label)
+			
 			print("Confidence for each prediction: " + str(p[0]))
 			h.write_report("Confidence for each prediction: " + str(p[0]))

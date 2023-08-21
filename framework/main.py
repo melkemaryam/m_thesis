@@ -24,6 +24,7 @@ from bayesian import Bayesian
 # import packages
 import argparse
 from randoms import Randoms
+from skip import Skip
 
 import os
 
@@ -45,6 +46,10 @@ if __name__ == '__main__':
 		hb = Hyper_band()
 		ba = Bayesian()
 		rs = Randoms()
+		ski = Skip()
+
+		#ski.create_train()
+		no = 0
 
 		# predict images only with privided folder
 		if(args["train"] == 'pred'):
@@ -57,7 +62,8 @@ if __name__ == '__main__':
 				#tr.train_tf()
 				#hb.main_train_net()
 				#ba.main_train_net()
-				rs.main_train_net()
+				#rs.main_train_net()
+				no = 1
 
 			elif(args["model"] == 'log' or args["model"] == 'svm' or args["model"] == 'nb'):
 				tr.train_sk()

@@ -45,6 +45,18 @@ class Helper():
 
 		print("[INFO] report written")
 
+	def write_pred(self, report):
+
+		# create report
+		file = open("../reports/pos_" + datetime.now().strftime("%Y%m%d-%H%M") + ".md", "a")
+
+		file.write(str(report))
+		file.write("\n")
+		file.close()
+
+		print("[INFO] report written")
+
+
 	def write_score(self, train_score, test_score):
 
 		# get arguments
@@ -86,11 +98,11 @@ class Helper():
 
 		return labels
 
-	def plot_freq(self, data):
+	def plot_freq(self):
 
 		re = Read_data()
 
-		wordl = re.get_words(data)
+		wordl = re.get_words()
 		counter = collections.Counter(wordl)
 
 		sns.set_style('darkgrid')
@@ -101,10 +113,10 @@ class Helper():
 
 		plt.close()
 
-		plt.plot(x[:20],y[:20])
+		plt.plot(x[:30],y[:30])
 		plt.title('Frequency Distribution')
 		plt.xlabel('Words')
-		plt.xticks(x[:20], rotation=90)
+		plt.xticks(x[:30], rotation=90)
 		plt.ylabel('Counts')
 		plt.tight_layout()
 
