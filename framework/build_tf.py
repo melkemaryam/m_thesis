@@ -242,7 +242,6 @@ class Build_tf():
 
 		self.model.add(Dense(units=units, activation='relu', kernel_initializer='he_uniform'))
 		self.model.add(Dense(3, activation='softmax'))
-		#self.model.add(Dense(1, "sigmoid"))
 
 	# function for the last layer
 	def add_last_cnn_layer(self, units, dropout):
@@ -253,7 +252,6 @@ class Build_tf():
 		self.model.add(BatchNormalization())
 		self.model.add(Dropout(rate=dropout))
 		self.model.add(Dense(3, activation='softmax'))
-		#self.model.add(Dense(1, "sigmoid"))
 
 	# function to compile with inner optimiser
 	def compile(self):

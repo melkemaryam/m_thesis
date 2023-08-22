@@ -192,7 +192,6 @@ class Hyper_band():
 
 		self.model.add(Dense(units=units, activation='relu', kernel_initializer='he_uniform'))
 		self.model.add(Dense(3, activation='softmax'))
-		#self.model.add(Dense(1, "sigmoid"))
 
 	# function for the last layer
 	def add_last_cnn_layer(self, units, dropout):
@@ -203,7 +202,6 @@ class Hyper_band():
 		self.model.add(BatchNormalization())
 		self.model.add(Dropout(rate=dropout))
 		self.model.add(Dense(3, activation='softmax'))
-		#self.model.add(Dense(1, "sigmoid"))
 
 	
 	def tuning(self):
