@@ -49,8 +49,6 @@ class Read_data():
 		data = self.return_data()
 		print(data.head())
 
-		#data = data[:8000]
-
 		return data
 
 	def train_test_data(self):
@@ -60,7 +58,7 @@ class Read_data():
 
 		data = self.get_data()
 
-		if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm'):
+		if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm' or args["model"] == 'rnn'):
 			# Features and Labels
 			X = data['tokenised']
 			y = pd.get_dummies(data['agg_label']).values
@@ -101,7 +99,6 @@ class Read_data():
 
 		data.fillna('', inplace=True)
 		data.drop(columns = ['Unnamed: 0'], inplace=True)
-		#data = data.iloc[:20000]
 
 		return data
 

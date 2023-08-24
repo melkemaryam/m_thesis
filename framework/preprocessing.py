@@ -150,8 +150,3 @@ class Preprocessing():
 			data.to_csv("/Users/Hannah1/Downloads/article_df_final2.csv", sep='\t')
 
 			return path
-
-
-
-
-

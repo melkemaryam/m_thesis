@@ -15,7 +15,7 @@ methods:
 * add_last_cnn_layer()
 * tuning()
 * training()
-* write_report
+* write_report()
 
 purpose:
 * use Random Search hyperparameter optimisation
@@ -24,8 +24,6 @@ purpose:
 
 # set the matplotlib backend so figures can be saved in the background
 import matplotlib
-#import matplotlib.pyplot as plt
-#matplotlib.use("Agg")
 
 # import packages
 import argparse
@@ -61,6 +59,7 @@ import time
 
 from read_data import Read_data
 from helper import Helper
+from predicting import Predicting
 
 if __name__ == '__randoms__':
 	try:
@@ -88,7 +87,8 @@ class Randoms():
 		history = self.training()
 
 		# predict labels
-		#self.prediction_process()
+		pr = Predicting()
+		pr.prediction_process()
 
 	def build_net(self, hp):
 
@@ -104,7 +104,6 @@ class Randoms():
 		hp_filters = hp.Choice('filters', values = [32, 64, 128, 256, 512])
 		hp_units = hp.Choice('units', values = [32, 64, 128, 256, 512])
 		hp_dropout = hp.Choice('rate', values = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6])
-		#hp_max_len = hp.Choice('input_length', values = [128, 256, 512, 1024])
 		hp_embed_size = hp.Choice('output_dim', values = [64, 100, 150])
 
 		MAX_LENGTH = 256
@@ -126,7 +125,7 @@ class Randoms():
 			self.add_convolution(hp_filters)
 			self.add_convolution(hp_filters)
 			self.add_dropout(hp_dropout)
-			self.add_last_cnn_layer(hp_units, hp_dropout)
+			self.add_last_layer(hp_units, hp_dropout)
 
 		elif(args["model"] == 'lstm'):
 
@@ -141,7 +140,7 @@ class Randoms():
 		elif(args["model"] == 'rnn'):
 
 			self.add_rnn(hp_embed_size, hp_dropout)
-			self.add_last_cnn_layer(hp_units, hp_dropout)
+			self.add_last_layer(hp_units, hp_dropout)
 
 		elif(args["model"] == 'basic'):
 
@@ -153,8 +152,6 @@ class Randoms():
 		
 		hp_learning_rate = hp.Choice('learning_rate', values = [1e-1, 1e-2, 1e-3, 1e-4])
 		opt = Adam(learning_rate=hp_learning_rate)
-		#opt = SGD(learning_rate=hp_learning_rate)
-		#opt = RMSprop(learning_rate=hp_learning_rate)
 		
 		self.model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 
@@ -200,30 +197,21 @@ class Randoms():
 		self.model.add(Bidirectional(LSTM(EMBED_SIZE)))
 		self.model.add(Dropout(rate=dropout))
 
-	def add_last_layer(self, units):
-
-		self.model.add(Dense(units=units, activation='relu', kernel_initializer='he_uniform'))
-		self.model.add(Dense(3, activation='softmax'))
-		#self.model.add(Dense(1, "sigmoid"))
-
 	# function for the last layer
-	def add_last_cnn_layer(self, units, dropout):
+	def add_last_layer(self, units, dropout):
 
-		#self.model.add(GlobalMaxPooling1D())
 		self.model.add(Flatten())
 		self.model.add(Dense(units=units, activation='relu', kernel_initializer='he_uniform'))
 		self.model.add(BatchNormalization())
 		self.model.add(Dropout(rate=dropout))
 		self.model.add(Dense(3, activation='softmax'))
-		#self.model.add(Dense(1, "sigmoid"))
-
 	
 	def tuning(self):
 
 		re = Read_data()
 		h = Helper()
 
-		# optimise with Hyperband
+		# optimise with Random Search
 		self.tuner = RandomSearch(
 			self.build_net,
 			objective='accuracy',
@@ -311,10 +299,6 @@ class Randoms():
 		print('test_loss:', results[0], 'test_accuracy:', results[1])
 		h.write_score(acc, results[1])
 
-		print("Confidence for each prediction: " + str(predictions))
-		self.write_report("Confidence for each prediction: " + str(predictions))
-
-
 	def write_report(self, report):
 
 		file = open("../reports/randoms/test_report_rs_adam_" + datetime.now().strftime("%Y%m%d-%H%M") + ".md", "a")
@@ -324,19 +308,3 @@ class Randoms():
 		file.close()
 
 		print("[INFO] report written")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

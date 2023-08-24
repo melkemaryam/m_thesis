@@ -42,7 +42,7 @@ class Predicting():
 		# load the trained model
 		print("[INFO] loading model...")
 
-		if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm' or args["model"] == 'rnn' or args["model"] == 'bert'):
+		if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm' or args["model"] == 'rnn'):
 			model = load_model(args["path"])
 
 		elif(args["model"] == 'log' or args["model"] == 'svm' or args["model"] == 'nb'):
@@ -71,7 +71,7 @@ class Predicting():
 		tokeniser = Tokenizer(num_words=10000, oov_token= "<OOV>")
 		tokeniser.fit_on_texts(new_data)
 
-		if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm' or args["model"] == 'rnn' or args["model"] == 'bert'):
+		if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm' or args["model"] == 'rnn'):
 			
 			MAX_LENGTH = 256
 
@@ -92,7 +92,7 @@ class Predicting():
 			padded_seqs = pad_sequences(sequences, maxlen=MAX_LENGTH, padding='post', truncating='post')
 			p = model.predict(padded_seqs)
 
-			if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm' or args["model"] == 'rnn' or args["model"] == 'bert'):
+			if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm' or args["model"] == 'rnn'):
 			
 				j = p.argmax(axis=1)[0]
 				label = labels[j]
@@ -126,7 +126,6 @@ class Predicting():
 	
 				print(p)
 				h.write_report(p)
-
 
 		print("Number of negative predictions: " + str(neg_count))
 		h.write_report("Number of negative predictions: " + str(neg_count))

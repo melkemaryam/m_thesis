@@ -114,9 +114,9 @@ class Build_sk():
 			
 			# Train the word2vec model
 			w2v_model = Word2Vec(X_train,
-								vector_size=6000, ## Size of the Vector
+								vector_size=1000, ## Size of the Vector
 								window=5, ## Number words before and after the focus word that it’ll consider as context for the word
-								min_count=4) ## The number of times a word must appear in our corpus in order to create a word vector
+								min_count=2) ## The number of times a word must appear in our corpus in order to create a word vector
 
 			# Transform the data using w2v
 			words = set(w2v_model.wv.index_to_key)

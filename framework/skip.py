@@ -8,7 +8,6 @@ pd.options.mode.chained_assignment = None
 import numpy as np
 from pandas import DataFrame
 
-
 #import libraries and modules
 import io
 
@@ -24,6 +23,8 @@ from keras.utils import vis_utils
 from sklearn.metrics.pairwise import cosine_similarity
 import seaborn as sns
 import nltk
+
+from predicting import Predicting
 
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
@@ -151,3 +152,39 @@ class Skip():
 		h.plot_tsne(word_embeddings, idx2word)
 
 		return model
+
+
+	def create_plots(self):
+
+		pr = Predicting()
+		model = pr.load_net()
+
+		re = Read_data()
+		h = Helper()
+		h.plot_freq()
+
+		word2idx = re.prepare_data()
+		idx2word = re.get_idx2word(word2idx)
+
+		word_embeddings = model.get_layer('target_embed_layer').get_weights()[0] 
+
+		# should return (VOCAB_SIZE, EMBED_SIZE)
+		print(word_embeddings.shape)
+		print(DataFrame(word_embeddings, index=idx2word.values()).head(10))
+
+		similarity_matrix = cosine_similarity(word_embeddings)
+
+		# should print(VOCAB_SIZE, VOCAB_SIZE)
+		print(similarity_matrix.shape)
+
+		search_terms = ['death', 'life', 'good', 'bad', 'man', 'woman', 'happy', 'unhappy', 'obama', 'trump', 'book', 'school', 'sex', 'apple', 'movie', 'university', 'london', 'russia', 'army', 'feminism', 'girl', 'boy', 'kim', 'music', 'woke', 'attack', 'terror', 'christian', 'muslim', 'modern', 'art', 'election', 'bias', 'ai']
+		similar_words = dict()
+		df = DataFrame(similarity_matrix, idx2word.values(), idx2word.values())
+
+		for term in search_terms:
+
+			similar_words[term] = df[term].abs().sort_values(ascending=False).iloc[1:11].index.to_list()
+
+		print(similar_words)
+		h.write_report(similar_words)
+		h.plot_tsne(word_embeddings, idx2word)

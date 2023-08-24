@@ -48,31 +48,42 @@ if __name__ == '__main__':
 		rs = Randoms()
 		ski = Skip()
 
-		#ski.create_train()
-		no = 0
+		if(args["model"] == 'skip'):
+
+			ski.create_plots()
 
 		# predict images only with privided folder
 		if(args["train"] == 'pred'):
 			pred.prediction_process()
 
 		# train, test, optimise, and predict with provided images
-		elif((args["train"] == "all" or args["train"] == "one" or args["train"] == "none")):
+		elif((args["train"] == "none")):
 
 			if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm' or args["model"] == 'rnn'):
-				#tr.train_tf()
-				#hb.main_train_net()
-				#ba.main_train_net()
-				#rs.main_train_net()
-				no = 1
+				tr.train_tf()
+				pred.prediction_process()
 
 			elif(args["model"] == 'log' or args["model"] == 'svm' or args["model"] == 'nb'):
 				tr.train_sk()
+				pred.prediction_process()
 
-			pred.prediction_process()
+		# train, test, optimise, and predict with provided images
+		elif((args["train"] == "all")):
+			
+			if(args["optimiser"] == 'hyperband'):
+				hb.main_train_net()
+
+			elif(args["optimiser"] == 'bayesian'):
+				ba.main_train_net()
+
+			elif(args["optimiser"] == 'random'):
+				rs.main_train_net()		
 
 	except KeyboardInterrupt:
 		pass
 
+
+# Example Python commands:
 
 # log/tfidf with training: python3 main.py -m log -v tfidf -d titles -tr none -pa ../output/log_tfidf.model
 # log/count with training: python3 main.py -m log -v count -d titles -tr none -pa ../output/log_count.model
@@ -86,14 +97,12 @@ if __name__ == '__main__':
 # nb/count with training: python3 main.py -m nb -v count -d titles -tr none -pa ../output/nb_count.model
 # nb/w2v with training: python3 main.py -m nb -v w2v -d titles -tr none -pa ../output/nb_w2v.model
 
-# basic with training: python3 main.py -m basic -d titles -tr none -pa ../output/basic.model
-# cnn with training: python3 main.py -m cnn -d titles -tr none -pa ../output/cnn.model
-# lstm with training: python3 main.py -m lstm -d titles -tr none -pa ../output/lstm.model
-# bilstm with training: python3 main.py -m bilstm -d titles -tr none -pa ../output/bilstm.model
+# basic with training: python3 main.py -m basic -inop adam -d titles -tr none -pa ../output/basic.model
+# cnn with training: python3 main.py -m cnn -inop adam -d titles -tr none -pa ../output/cnn.model
+# lstm with training: python3 main.py -m lstm -inop adam -d titles -tr none -pa ../output/lstm.model
+# bilstm with training: python3 main.py -m bilstm -inop adam -d titles -tr none -pa ../output/bilstm.model
+# rnn with training: python3 main.py -m rnn -inop adam -d titles -tr none -pa ../output/rnn.model
 
-
-
-
-
-
-
+# rnn with optimisation: python3 main.py -m rnn -op hyperband -d titles -tr all -pa ../output/hyperband_rnn.model
+# cnn with optimisation: python3 main.py -m cnn -op bayesian -d titles -tr all -pa ../output/hyperband_cnn.model
+# lstm with optimisation: python3 main.py -m lstm -op random -d titles -tr all -pa ../output/hyperband_lstm.model

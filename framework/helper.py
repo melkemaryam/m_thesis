@@ -22,6 +22,7 @@ import argparse
 from arguments import Args
 from datetime import datetime
 import matplotlib.pyplot as plt
+plt.rcParams.update({'font.size': 12})
 from sklearn.model_selection import LearningCurveDisplay, ShuffleSplit
 import os
 from plot_keras_history import plot_history
@@ -95,21 +96,6 @@ class Helper():
 		print('Test Accuracy %.3f' % test_score)
 		self.write_report('Test Accuracy %.3f' % test_score)
 
-	def set_model(self, model):
-
-		return model
-
-	def check_path(self):
-		
-		# create the folder
-		if not os.path.exists('Predict'):
-			os.makedirs('Predict')
-
-		# empty Predict directory, so only new data is shown
-		files = glob.glob('Predict/*')
-		for f in files:
-			os.remove(f)
-
 	def get_labels(self):
 		
 		# load sign names
@@ -133,10 +119,10 @@ class Helper():
 
 		plt.close()
 
-		plt.plot(x[:30],y[:30])
+		plt.plot(x[:20],y[:20])
 		plt.title('Frequency Distribution')
 		plt.xlabel('Words')
-		plt.xticks(x[:30], rotation=90)
+		plt.xticks(x[:20], rotation=90)
 		plt.ylabel('Counts')
 		plt.tight_layout()
 
@@ -151,7 +137,7 @@ class Helper():
 		np.set_printoptions(suppress=True)
 		plot_only = 100 
 
-		T = tsne.fit_transform(word_embeddings[:plot_only, :])
+		T = tsne.fit_transform(word_embeddings[plot_only:(plot_only*2), :])
 		labels = [idx2word[i+1] for i in range(plot_only)]
 		plt.figure(figsize=(14, 8))
 		plt.scatter(T[:, 0], T[:, 1])

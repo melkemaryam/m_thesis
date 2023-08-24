@@ -15,7 +15,7 @@ methods:
 * add_last_cnn_layer()
 * tuning()
 * training()
-* write_report
+* write_report()
 
 purpose:
 * use hyperband hyperparameter optimisation
@@ -24,8 +24,6 @@ purpose:
 
 # set the matplotlib backend so figures can be saved in the background
 import matplotlib
-#import matplotlib.pyplot as plt
-#matplotlib.use("Agg")
 
 # import packages
 import argparse
@@ -61,6 +59,7 @@ import time
 
 from read_data import Read_data
 from helper import Helper
+from predicting import Predicting
 
 class Hyper_band():
 
@@ -76,7 +75,8 @@ class Hyper_band():
 		history = self.training()
 
 		# predict labels
-		#self.prediction_process()
+		pr = Predicting()
+		pr.prediction_process()
 
 	def build_net(self, hp):
 
@@ -92,7 +92,6 @@ class Hyper_band():
 		hp_filters = hp.Choice('filters', values = [32, 64, 128, 256, 512])
 		hp_units = hp.Choice('units', values = [32, 64, 128, 256, 512])
 		hp_dropout = hp.Choice('rate', values = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6])
-		#hp_max_len = hp.Choice('input_length', values = [128, 256, 512, 1024])
 		hp_embed_size = hp.Choice('output_dim', values = [64, 100, 150])
 
 		MAX_LENGTH = 256
@@ -114,7 +113,7 @@ class Hyper_band():
 			self.add_convolution(hp_filters)
 			self.add_convolution(hp_filters)
 			self.add_dropout(hp_dropout)
-			self.add_last_cnn_layer(hp_units, hp_dropout)
+			self.add_last_layer(hp_units, hp_dropout)
 
 		elif(args["model"] == 'lstm'):
 
@@ -129,7 +128,7 @@ class Hyper_band():
 		elif(args["model"] == 'rnn'):
 
 			self.add_rnn(hp_embed_size, hp_dropout)
-			self.add_last_cnn_layer(hp_units, hp_dropout)
+			self.add_last_layer(hp_units, hp_dropout)
 
 		elif(args["model"] == 'basic'):
 
@@ -141,9 +140,7 @@ class Hyper_band():
 		
 		hp_learning_rate = hp.Choice('learning_rate', values = [1e-1, 1e-2, 1e-3, 1e-4])
 		opt = Adam(learning_rate=hp_learning_rate)
-		#opt = SGD(learning_rate=hp_learning_rate)
-		#opt = RMSprop(learning_rate=hp_learning_rate)
-		
+
 		self.model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 
 		return self.model
@@ -173,7 +170,6 @@ class Hyper_band():
 		self.model.add(Conv1D(filters=filters, kernel_size=(3), activation='relu', kernel_initializer='he_uniform', padding='same'))
 		self.model.add(BatchNormalization(axis=-1))
 
-	# function for pooling
 	def add_dropout(self, dropout):
 
 		self.model.add(Dropout(rate=dropout))
@@ -188,21 +184,14 @@ class Hyper_band():
 		self.model.add(Bidirectional(LSTM(EMBED_SIZE)))
 		self.model.add(Dropout(rate=dropout))
 
-	def add_last_layer(self, units):
-
-		self.model.add(Dense(units=units, activation='relu', kernel_initializer='he_uniform'))
-		self.model.add(Dense(3, activation='softmax'))
-
 	# function for the last layer
-	def add_last_cnn_layer(self, units, dropout):
+	def add_last_layer(self, units, dropout):
 
-		#self.model.add(GlobalMaxPooling1D())
 		self.model.add(Flatten())
 		self.model.add(Dense(units=units, activation='relu', kernel_initializer='he_uniform'))
 		self.model.add(BatchNormalization())
 		self.model.add(Dropout(rate=dropout))
 		self.model.add(Dense(3, activation='softmax'))
-
 	
 	def tuning(self):
 
@@ -297,10 +286,6 @@ class Hyper_band():
 		print('test_loss:', results[0], 'test_accuracy:', results[1])
 		h.write_score(acc, results[1])
 
-		print("Confidence for each prediction: " + str(predictions))
-		self.write_report("Confidence for each prediction: " + str(predictions))
-
-
 	def write_report(self, report):
 
 		file = open("../reports/hyperband/test_report_hb_adam_" + datetime.now().strftime("%Y%m%d-%H%M") + ".md", "a")
@@ -310,21 +295,3 @@ class Hyper_band():
 		file.close()
 
 		print("[INFO] report written")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

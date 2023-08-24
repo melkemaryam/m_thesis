@@ -41,96 +41,11 @@ from keras import backend as K
 from inner_opt import Inner_opt
 from read_data import Read_data
 
-# arguments: choose between normal, lstm, cnn
-
-
 class Build_tf():
 
 	def __init__(self, model):
 
 		self.model = model
-
-	def return_model(self):
-
-		arg = Args()
-		args = arg.parse_arguments()
-
-		# train with all optimisations
-		if (args["train"] == 'all'):
-			return self.build_net_opt
-
-		# train with one optimisation
-		elif (args["train"] == 'one'):
-			return self.build_net()
-
-		# train without optimisation
-		elif (args["train"] == 'none'):
-			return self.build_net()
-
-
-	def build_net_opt(self, hp):
-
-		# build the model layer by layer
-		re = Read_data()
-		a = Args()
-		args = a.parse_arguments()
-
-		# initialise sequential model
-		self.model = Sequential()
-
-		# create range and grid for optimisation
-		hp_filters = hp.Choice('filters', values = [32, 64, 128, 256, 512])
-		hp_units = hp.Choice('units', values = [32, 64, 128, 256, 512])
-		hp_dropout = hp.Choice('rate', values = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6])
-		#hp_max_len = hp.Choice('input_length', values = [128, 256, 512, 1024])
-		hp_embed_size = hp.Choice('output_dim', values = [64, 100, 150])
-
-		MAX_LENGTH = 256
-		VOCAB_SIZE = len(re.prepare_data())
-
-		# build the model layer by layer
-		# First layer
-		self.add_embedding(VOCAB_SIZE, hp_embed_size, MAX_LENGTH, hp_dropout)
-
-		# get titles only
-		if(args["model"] == 'cnn'):
-
-			self.add_first_conv(hp_filters)
-			self.add_convolution(hp_filters)
-			self.add_dropout(hp_dropout)
-			self.add_convolution(hp_filters)
-			self.add_convolution(hp_filters)
-			self.add_dropout(hp_dropout)
-			self.add_convolution(hp_filters)
-			self.add_convolution(hp_filters)
-			self.add_dropout(hp_dropout)
-			self.add_last_cnn_layer(hp_units, hp_dropout)
-
-		elif(args["model"] == 'lstm'):
-
-			self.add_lstm(hp_embed_size, hp_dropout)
-			self.add_last_layer(hp_units)
-
-		elif(args["model"] == 'bilstm'):
-
-			self.add_bilstm(hp_embed_size, hp_dropout)
-			self.add_last_layer(hp_units)
-
-		elif(args["model"] == 'rnn'):
-
-			self.add_rnn(hp_embed_size, hp_dropout)
-			self.add_last_cnn_layer(hp_units, hp_dropout)
-
-		elif(args["model"] == 'basic'):
-
-			self.add_pooling(hp_dropout)
-			self.add_last_layer(hp_units)
-
-		# compile with inner optimiser
-		self.compile()
-
-		return self.model
-
 
 	def build_net(self):
 
@@ -138,8 +53,8 @@ class Build_tf():
 		a = Args()
 		args = a.parse_arguments()
 
-		MAX_LENGTH = 256 # or 200
-		EMBED_SIZE = 100 # or 64
+		MAX_LENGTH = 256
+		EMBED_SIZE = 100
 		VOCAB_SIZE = len(re.prepare_data())
 
 		# initialise sequential model
@@ -164,28 +79,28 @@ class Build_tf():
 			self.add_convolution(128)
 			self.add_convolution(128)
 			self.add_dropout(0.5)
-			self.add_last_cnn_layer(24, 0.3)
+			self.add_last_layer(24, 0.3)
 
 		elif(args["model"] == 'lstm'):
 
 			self.add_lstm(EMBED_SIZE, 0.5)
-			self.add_last_cnn_layer(24, 0.5)
+			self.add_last_layer(24, 0.5)
 
 		elif(args["model"] == 'bilstm'):
 
 			self.add_bilstm(EMBED_SIZE, 0.5)
-			self.add_last_cnn_layer(24, 0.5)
+			self.add_last_layer(24, 0.5)
 
 		elif(args["model"] == 'rnn'):
 
 			self.add_rnn(EMBED_SIZE, 0.5)
-			self.add_last_cnn_layer(24, 0.5)
+			self.add_last_layer(24, 0.5)
 
 		elif(args["model"] == 'basic'):
 
 			#self.model.add(GlobalAveragePooling1D())
 			self.add_dropout(0.2)
-			self.add_last_cnn_layer(24, 0.5)
+			self.add_last_layer(24, 0.5)
 
 		# compile with inner optimiser
 		self.compile()
@@ -238,15 +153,9 @@ class Build_tf():
 		self.model.add(Bidirectional(LSTM(50)))
 		self.model.add(Dropout(rate=dropout))
 
-	def add_last_layer(self, units):
-
-		self.model.add(Dense(units=units, activation='relu', kernel_initializer='he_uniform'))
-		self.model.add(Dense(3, activation='softmax'))
-
 	# function for the last layer
-	def add_last_cnn_layer(self, units, dropout):
+	def add_last_layer(self, units, dropout):
 
-		#self.model.add(GlobalMaxPooling1D())
 		self.model.add(Flatten())
 		self.model.add(Dense(units=units, activation='relu', kernel_initializer='he_uniform'))
 		self.model.add(BatchNormalization())

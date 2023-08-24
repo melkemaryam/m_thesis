@@ -1,3 +1,5 @@
+# get number of labels
+
 import matplotlib.pyplot as plot
 import numpy as np
 import pandas as pd
