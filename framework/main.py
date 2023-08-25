@@ -50,13 +50,13 @@ if __name__ == '__main__':
 
 		if(args["model"] == 'skip'):
 
-			ski.create_plots()
+			ski.create_train()
 
-		# predict images only with privided folder
+		# predicted labels with provided model
 		if(args["train"] == 'pred'):
 			pred.prediction_process()
 
-		# train, test, optimise, and predict with provided images
+		# train models without optimisation
 		elif((args["train"] == "none")):
 
 			if(args["model"] == 'basic' or args["model"] == 'cnn' or args["model"] == 'lstm' or args["model"] == 'bilstm' or args["model"] == 'rnn'):
@@ -67,7 +67,7 @@ if __name__ == '__main__':
 				tr.train_sk()
 				pred.prediction_process()
 
-		# train, test, optimise, and predict with provided images
+		# train models with hyperparameter optimisation
 		elif((args["train"] == "all")):
 			
 			if(args["optimiser"] == 'hyperband'):
@@ -104,5 +104,5 @@ if __name__ == '__main__':
 # rnn with training: python3 main.py -m rnn -inop adam -d titles -tr none -pa ../output/rnn.model
 
 # rnn with optimisation: python3 main.py -m rnn -op hyperband -d titles -tr all -pa ../output/hyperband_rnn.model
-# cnn with optimisation: python3 main.py -m cnn -op bayesian -d titles -tr all -pa ../output/hyperband_cnn.model
+# cnn with optimisation: python3 main.py -m cnn -op bayesian -d titles -tr all -pa ../output/bayesian_cnn.model
 # lstm with optimisation: python3 main.py -m lstm -op random -d titles -tr all -pa ../output/hyperband_lstm.model
