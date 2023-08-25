@@ -31,8 +31,10 @@ from read_data import Read_data
 
 import joblib
 
+# Define a class named Predicting
 class Predicting():
 
+	# load the correct model for predictions
 	def load_net(self):
 
 		# create objects of classes
@@ -50,6 +52,7 @@ class Predicting():
 
 		return model
 
+	# predict labels using a model
 	def prediction_process(self, **data):
 
 		# create objects of classes
@@ -65,6 +68,7 @@ class Predicting():
 		labels = h.get_labels()
 		model = self.load_net()
 
+		# use Australian news for predictions
 		new_data = pd.read_csv("../abcnews-date-text.csv")
 		new_data = new_data['headline_text']
 
@@ -84,6 +88,7 @@ class Predicting():
 		neu_count = 0
 		x_count = 0
 
+		# limit to 100 predictions
 		for x in new_data[:100]:
 
 			print(x)

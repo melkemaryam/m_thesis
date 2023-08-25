@@ -17,6 +17,7 @@ from arguments import Args
 import tensorflow as tf
 from tensorflow.keras.optimizers import SGD, Adam, RMSprop
 
+# Define a class named Inner_opt
 class Inner_opt():
 
 	def return_optimiser(self):

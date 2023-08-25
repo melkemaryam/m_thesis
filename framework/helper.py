@@ -33,12 +33,14 @@ import seaborn as sns
 from sklearn.manifold import TSNE
 import numpy as np
 
+# Define a class named Helper
 class Helper():
 
+	# Define a method that captures all neccessary data and saves it in a markdown file
 	def write_report(self, report):
 
 		# create report
-		file = open("../reports/report_" + datetime.now().strftime("%Y%m%d-%H%M") + ".md", "a")
+		file = open("../reports/report_" + datetime.now().strftime("%Y%m%d-%H%M") + ".md", "a") # path can be changed
 
 		file.write(str(report))
 		file.write("\n")
@@ -46,6 +48,7 @@ class Helper():
 
 		print("[INFO] report written")
 
+	# Define a method that saves the predictions of a model in separate markdown files depending on their label for future inspection
 	def write_pred(self, label, report):
 
 		# get arguments
@@ -57,17 +60,17 @@ class Helper():
 
 		if label == 0:
 
-			# create report
+			# create report for negative predictions
 			file = open("../predictions/neg_" + m_name + ".md", "a")
 
 		elif label == 1:
 
-			# create report
+			# create report for positive predictions
 			file = open("../predictions/pos_" + m_name + ".md", "a")
 
 		elif label == 2:
 
-			# create report
+			# create report for neutral predictions
 			file = open("../predictions/neu_" + m_name + ".md", "a")
 
 		file.write(str(report))
@@ -77,7 +80,7 @@ class Helper():
 
 		print("[INFO] report written")
 
-
+	# print and save the training/testing scores
 	def write_score(self, train_score, test_score):
 
 		# get arguments
@@ -96,6 +99,7 @@ class Helper():
 		print('Test Accuracy %.3f' % test_score)
 		self.write_report('Test Accuracy %.3f' % test_score)
 
+	# return the three lables for predictions
 	def get_labels(self):
 		
 		# load sign names
@@ -104,6 +108,7 @@ class Helper():
 
 		return labels
 
+	# plot the word frequency of the top 20 most frequently used words
 	def plot_freq(self):
 
 		re = Read_data()
@@ -131,6 +136,7 @@ class Helper():
 		
 		return counter
 
+	# plot the word similarities in a t-SNE plot
 	def plot_tsne(self, word_embeddings, idx2word):
 
 		tsne = TSNE(perplexity=3, n_components=2, init='pca', n_iter=5000, method='exact')
@@ -147,7 +153,7 @@ class Helper():
 		plt.savefig("../plots/tsne_" + datetime.now().strftime("%Y%m%d-%H%M"))
 		self.write_report("![](../plots/tsne_" + datetime.now().strftime("%Y%m%d-%H%M")+ ".png)")
 
-
+	# plot the accuracy and loss of the models
 	def plot_acc(self, model, v_train, y_train, op):
 
 		arg = Args()
@@ -179,7 +185,7 @@ class Helper():
 			plt.savefig("../plots/plot_acc_boost_" + datetime.now().strftime("%Y%m%d-%H%M"))
 			self.write_report("![](../plots/plot_acc_boost_" + datetime.now().strftime("%Y%m%d-%H%M")+ ".png)")
 
-
+	# plot the loss of the models
 	def plot_loss(self, model):
 
 		arg = Args()

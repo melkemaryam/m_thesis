@@ -41,6 +41,7 @@ from keras import backend as K
 from inner_opt import Inner_opt
 from read_data import Read_data
 
+# Define a class named Build_tf for the TF models
 class Build_tf():
 
 	def __init__(self, model):
@@ -55,58 +56,64 @@ class Build_tf():
 
 		MAX_LENGTH = 256
 		EMBED_SIZE = 100
+
+		# get length of unique words in the dataset
 		VOCAB_SIZE = len(re.prepare_data())
 
 		# initialise sequential model
 		self.model = Sequential()
 
-		# build the model layer by layer
-		# First layer
-		self.add_embedding(VOCAB_SIZE, EMBED_SIZE, MAX_LENGTH, 0.2)
+		# Create the embedding layer
+		self.add_embedding(VOCAB_SIZE, EMBED_SIZE, MAX_LENGTH, 0.1)
 
-		# get titles only
+		# important: the chosen values are the ones recommened by the optimisation methods and can be changed any time
+		# Build the model layer by layer based on the selected model type
 		if(args["model"] == 'cnn'):
 
-			self.add_first_conv(32)
-			self.add_convolution(32)
+			self.add_first_conv(512)
+			self.add_convolution(512)
 			self.add_dropout(0.1)
-			self.add_convolution(64)
-			self.add_convolution(64)
-			self.add_dropout(0.2)
-			self.add_convolution(128)
-			self.add_convolution(128)
-			self.add_dropout(0.5)
-			self.add_convolution(128)
-			self.add_convolution(128)
-			self.add_dropout(0.5)
-			self.add_last_layer(24, 0.3)
+			self.add_convolution(512)
+			self.add_convolution(512)
+			self.add_dropout(0.1)
+			self.add_convolution(512)
+			self.add_convolution(512)
+			self.add_dropout(0.1)
+			self.add_convolution(512)
+			self.add_convolution(512)
+			self.add_dropout(0.1)
+			self.add_last_layer(256, 0.1)
 
 		elif(args["model"] == 'lstm'):
 
-			self.add_lstm(EMBED_SIZE, 0.5)
-			self.add_last_layer(24, 0.5)
+			# Add an LSTM layer
+			self.add_lstm(EMBED_SIZE, 0.1)
+			self.add_last_layer(256, 0.1)
 
 		elif(args["model"] == 'bilstm'):
 
-			self.add_bilstm(EMBED_SIZE, 0.5)
-			self.add_last_layer(24, 0.5)
+			# Add a bidirectional LSTM layer
+			self.add_bilstm(EMBED_SIZE, 0.1)
+			self.add_last_layer(256, 0.1)
 
 		elif(args["model"] == 'rnn'):
 
-			self.add_rnn(EMBED_SIZE, 0.5)
-			self.add_last_layer(24, 0.5)
+			# Add an RNN layer
+			self.add_rnn(EMBED_SIZE, 0.1)
+			self.add_last_layer(256, 0.1)
 
 		elif(args["model"] == 'basic'):
 
-			#self.model.add(GlobalAveragePooling1D())
-			self.add_dropout(0.2)
-			self.add_last_layer(24, 0.5)
+			# Keep the model basic
+			self.add_dropout(0.1)
+			self.add_last_layer(256, 0.1)
 
 		# compile with inner optimiser
 		self.compile()
 
 		return self.model
 
+	# Define the add_embedding method
 	def add_embedding(self, VOCAB_SIZE, EMBED_SIZE, MAX_LENGTH, dropout):
 
 		a = Args()
@@ -120,28 +127,30 @@ class Build_tf():
 		
 		self.model.add(Dropout(rate=dropout))
 
-	# function for the first layer
+	# Add the first convolutional layer
 	def add_first_conv(self, filters):
 
 		self.model.add(Conv1D(filters=filters, kernel_size=(5), activation='relu', kernel_initializer='he_uniform', padding='same'))
 		self.model.add(BatchNormalization(axis=-1))
 
-	# function for the next layer
+	# function for the next convolutional layer
 	def add_convolution(self, filters):
 
 		self.model.add(Conv1D(filters=filters, kernel_size=(3), activation='relu', kernel_initializer='he_uniform', padding='same'))
 		self.model.add(BatchNormalization(axis=-1))
 
-	# function for pooling
+	# Define the add_dropout method
 	def add_dropout(self, dropout):
 
 		self.model.add(Dropout(rate=dropout))
 
+	# Define the add_lstm method
 	def add_lstm(self, EMBED_SIZE, dropout):
 
 		self.model.add(LSTM(EMBED_SIZE))
 		self.model.add(Dropout(rate=dropout))
 
+	# Define the add_bilstm method
 	def add_bilstm(self, EMBED_SIZE, dropout):
 
 		self.model.add(Bidirectional(LSTM(EMBED_SIZE)))

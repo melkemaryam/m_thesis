@@ -34,6 +34,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 from datetime import datetime
 # good tutorial: http://mccormickml.com/2016/04/19/word2vec-tutorial-the-skip-gram-model/
 
+# Define a class named Skip
 class Skip():
 
 	def create_train(self):
@@ -68,35 +69,31 @@ class Skip():
 
 		pairs, labels = skip_grams[0][0], skip_grams[0][1]
 
-		# The input is an array of target indices e.g. [2, 45, 7, 23,...9]
+		# The input is an array of target indices
 		target_word = Input((1,), dtype='int32')
 
-		# feed the words into the model using the Keras <Embedding> layer. This is the hidden layer 
-		# from whose weights we will get the word embeddings.
+		# create the embedding layer
 		target_embedding = Embedding(VOCAB_SIZE, EMBED_SIZE, name='target_embed_layer',
 									embeddings_initializer='glorot_uniform',
 									input_length=1)(target_word)
 
-		# at this point, the input would of the shape (num_inputs x 1 x embed_size) and has to be flattened 
-		# or reshaped into a (num_inputs x embed_size) tensor.
+		# at this point, the input would of the shape (num_inputs x 1 x embed_size), thus, flatten
 		target_input = Reshape((EMBED_SIZE, ))(target_embedding)
 
-		# The input is an array of target indices e.g. [2, 45, 7, 23,...9]
+		# The input is an array of target indices
 		context_word = Input((1,), dtype='int32')
 
-		# feed the words into the model using the Keras <Embedding> layer. This is the hidden layer 
-		# from whose weights we will get the word embeddings.
+		# create another embedding layer
 		context_embedding = Embedding(VOCAB_SIZE, EMBED_SIZE, name='context_embed_layer',
 									embeddings_initializer='glorot_uniform',
 									input_length=1)(context_word)
 
-		# at this point, the input would of the shape (num_inputs x 1 x embed_size) and has to be flattened 
-		# or reshaped into a (num_inputs x embed_size) tensor.
+		# flatten again
 		context_input = Reshape((EMBED_SIZE, ))(context_embedding)
 		merged_inputs = Dot(axes=-1, normalize=False)([target_input, context_input])
 		label = Dense(1, 'sigmoid')(merged_inputs)
 
-		# label is the output of step D.
+		# label is the output of the above model
 		model = Model(inputs=[target_word, context_word], outputs=[label])
 
 		model.compile(loss='mean_squared_error', optimizer='adam')
@@ -130,15 +127,14 @@ class Skip():
 
 		word_embeddings = model.get_layer('target_embed_layer').get_weights()[0] 
 
-		# should return (VOCAB_SIZE, EMBED_SIZE)
 		print(word_embeddings.shape)
 		print(DataFrame(word_embeddings, index=idx2word.values()).head(10))
 
 		similarity_matrix = cosine_similarity(word_embeddings)
 
-		# should print(VOCAB_SIZE, VOCAB_SIZE)
 		print(similarity_matrix.shape)
 
+		# list of words can be changed to look at different word similarities
 		search_terms = ['death', 'life', 'good', 'bad', 'man', 'woman', 'happy', 'unhappy', 'obama', 'trump', 'book', 'school', 'sex', 'apple', 'movie', 'university', 'london', 'russia', 'army', 'feminism', 'girl', 'boy']
 		similar_words = dict()
 		df = DataFrame(similarity_matrix, idx2word.values(), idx2word.values())
@@ -153,7 +149,7 @@ class Skip():
 
 		return model
 
-
+	# standalone method to use if skip-gram model has already been trained and is provided
 	def create_plots(self):
 
 		pr = Predicting()
@@ -177,6 +173,7 @@ class Skip():
 		# should print(VOCAB_SIZE, VOCAB_SIZE)
 		print(similarity_matrix.shape)
 
+		# list of words can be changed to look at different word similarities
 		search_terms = ['death', 'life', 'good', 'bad', 'man', 'woman', 'happy', 'unhappy', 'obama', 'trump', 'book', 'school', 'sex', 'apple', 'movie', 'university', 'london', 'russia', 'army', 'feminism', 'girl', 'boy', 'kim', 'music', 'woke', 'attack', 'terror', 'christian', 'muslim', 'modern', 'art', 'election', 'bias', 'ai']
 		similar_words = dict()
 		df = DataFrame(similarity_matrix, idx2word.values(), idx2word.values())

@@ -36,7 +36,7 @@ from gensim.models import Word2Vec
 from read_data import Read_data
 from helper import Helper
 
-
+# Define a class named Build_sk for the SK models
 class Build_sk():
 
 	def __init__(self, model):
@@ -60,6 +60,7 @@ class Build_sk():
 
 			# train with support vector machine
 			elif (args["model"] == 'svm'):
+				
 				# create support vector classifier
 				self.model = SVC(kernel='linear', probability=True, C = 1, gamma = "auto")
 
@@ -67,6 +68,7 @@ class Build_sk():
 
 			# train with naive bayes
 			elif (args["model"] == 'nb'):
+				
 				# create gaussian naive bayes
 				self.model = GaussianNB()
 
@@ -109,7 +111,7 @@ class Build_sk():
 			
 			return vector, v_train, v_test
 
-		# train without optimisation
+		# get Word2Vec
 		elif (args["vector"] == 'w2v'):
 			
 			# Train the word2vec model

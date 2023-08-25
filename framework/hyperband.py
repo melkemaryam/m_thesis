@@ -61,34 +61,41 @@ from read_data import Read_data
 from helper import Helper
 from predicting import Predicting
 
+# Define a class named Hyper_band
 class Hyper_band():
 
+	# Define the main_train_net method
 	def main_train_net(self):
 
+		# Create an instance of the Args class
 		arg = Args()
 		self.args = arg.parse_arguments()
 
+		# Create an instance of the Hyper_band class
 		self.net = Hyper_band()
 
-		# prepare the data and the model
+		# Prepare the data and the model
 		self.tuning()
 		history = self.training()
 
-		# predict labels
+		# Perform label prediction
 		pr = Predicting()
 		pr.prediction_process()
 
+	# Define the build_net method with hyperparameter tuning
 	def build_net(self, hp):
 
-		# build the model layer by layer
+		# Create an instance of the Read_data class
 		re = Read_data()
+
+		# Create an instance of the Args class
 		a = Args()
 		args = a.parse_arguments()
 
-		# initialise sequential model
+		# Initialize a sequential model
 		self.model = Sequential()
 
-		# create range and grid for optimisation
+		# Define hyperparameters for tuning
 		hp_filters = hp.Choice('filters', values = [32, 64, 128, 256, 512])
 		hp_units = hp.Choice('units', values = [32, 64, 128, 256, 512])
 		hp_dropout = hp.Choice('rate', values = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6])
@@ -97,13 +104,13 @@ class Hyper_band():
 		MAX_LENGTH = 256
 		VOCAB_SIZE = len(re.prepare_data())
 
-		# build the model layer by layer
-		# First layer
+		# Create the embedding layer
 		self.add_embedding(VOCAB_SIZE, hp_embed_size, MAX_LENGTH, hp_dropout)
 
-		# get titles only
+		# Build the model layer by layer based on the selected model type
 		if(args["model"] == 'cnn'):
 
+			# Add convolutional layers
 			self.add_first_conv(hp_filters)
 			self.add_convolution(hp_filters)
 			self.add_dropout(hp_dropout)
@@ -117,25 +124,29 @@ class Hyper_band():
 
 		elif(args["model"] == 'lstm'):
 
+			# Add an LSTM layer
 			self.add_lstm(hp_embed_size, hp_dropout)
 			self.add_last_layer(hp_units)
 
 		elif(args["model"] == 'bilstm'):
 
+			# Add a bidirectional LSTM layer
 			self.add_bilstm(hp_embed_size, hp_dropout)
 			self.add_last_layer(hp_units)
 
 		elif(args["model"] == 'rnn'):
 
+			# Add an RNN layer
 			self.add_rnn(hp_embed_size, hp_dropout)
-			self.add_last_layer(hp_units, hp_dropout)
+			self.add_last_ayer(hp_units, hp_dropout)
 
 		elif(args["model"] == 'basic'):
 
-			self.add_pooling(hp_dropout)
+			# Keep the model basic
+			self.add_dropout(hp_dropout)
 			self.add_last_layer(hp_units)
 
-		# compile with inner optimiser
+		# Compile the model with an inner optimizer
 		print("[INFO] compiling model...")
 		
 		hp_learning_rate = hp.Choice('learning_rate', values = [1e-1, 1e-2, 1e-3, 1e-4])
@@ -145,12 +156,13 @@ class Hyper_band():
 
 		return self.model
 
+	# Define the add_embedding method
 	def add_embedding(self, VOCAB_SIZE, EMBED_SIZE, MAX_LENGTH, dropout):
 
 		a = Args()
 		args = a.parse_arguments()
 
-		# FOR BILSTM WITHOUT MASK ZERO
+		# FOR BILSTM AND RNN WITHOUT MASK ZERO
 		if(args["model"] == 'bilstm' or args["model"] == 'rnn'):
 			self.model.add(Embedding(VOCAB_SIZE, EMBED_SIZE, mask_zero=False, input_length = MAX_LENGTH))
 		else:
@@ -158,41 +170,55 @@ class Hyper_band():
 		
 		self.model.add(Dropout(rate=dropout))
 
-	# function for the first layer
+	# Add the first convolutional layer
 	def add_first_conv(self, filters):
 
 		self.model.add(Conv1D(filters=filters, kernel_size=(5), activation='relu', kernel_initializer='he_uniform', padding='same'))
 		self.model.add(BatchNormalization(axis=-1))
 
-	# function for the next layer
+	# function for the next convolutional layer
 	def add_convolution(self, filters):
 
 		self.model.add(Conv1D(filters=filters, kernel_size=(3), activation='relu', kernel_initializer='he_uniform', padding='same'))
 		self.model.add(BatchNormalization(axis=-1))
 
+	# Define the add_dropout method
 	def add_dropout(self, dropout):
 
 		self.model.add(Dropout(rate=dropout))
 
+	# Define the add_lstm method
 	def add_lstm(self, EMBED_SIZE, dropout):
 
 		self.model.add(LSTM(EMBED_SIZE))
 		self.model.add(Dropout(rate=dropout))
 
+	# Define the add_bilstm method
 	def add_bilstm(self, EMBED_SIZE, dropout):
 
 		self.model.add(Bidirectional(LSTM(EMBED_SIZE)))
 		self.model.add(Dropout(rate=dropout))
 
-	# function for the last layer
+	# Define the add_rnn method
+	def add_rnn(self, EMBED_SIZE, dropout):
+
+		half = int(EMBED_SIZE/2)
+
+		self.model.add(Bidirectional(LSTM(EMBED_SIZE, return_sequences=True)))
+		self.model.add(Bidirectional(LSTM(half)))
+		self.model.add(Dropout(rate=dropout))
+
+	# Define the add_last_layer method
 	def add_last_layer(self, units, dropout):
 
+		# Add the last dense and output layers with softmax
 		self.model.add(Flatten())
 		self.model.add(Dense(units=units, activation='relu', kernel_initializer='he_uniform'))
 		self.model.add(BatchNormalization())
 		self.model.add(Dropout(rate=dropout))
 		self.model.add(Dense(3, activation='softmax'))
 	
+	# Define the tuning method for hyperparameter optimization
 	def tuning(self):
 
 		h = Helper()
@@ -232,6 +258,7 @@ class Hyper_band():
 		print(n_best_models[0].summary()) # best-model summary
 		self.write_report(n_best_models[0].summary())
 
+	# Define the training method
 	def training(self):
 
 		# train the network
@@ -252,7 +279,7 @@ class Hyper_band():
 		self.train = self.tuner.hypermodel.build(self.best_hyperparameters)
 		self.train.summary()
 
-		# train the model
+		# Train the network and evaluate its performance
 		history = self.train.fit(X_train,
 			y_train,
 			validation_data=(X_test, y_test),
@@ -286,6 +313,7 @@ class Hyper_band():
 		print('test_loss:', results[0], 'test_accuracy:', results[1])
 		h.write_score(acc, results[1])
 
+	# Define the write_report method
 	def write_report(self, report):
 
 		file = open("../reports/hyperband/test_report_hb_adam_" + datetime.now().strftime("%Y%m%d-%H%M") + ".md", "a")

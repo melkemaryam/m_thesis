@@ -34,7 +34,7 @@ stop_words = set(stopwords.words('english'))
 from nltk.stem import WordNetLemmatizer  # lemmatization
 nltk.download('wordnet')
 
-
+# Define a class named Preprocessing
 class Preprocessing():
 
 	def pre_process(self, df):

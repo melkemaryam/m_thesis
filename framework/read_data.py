@@ -40,7 +40,7 @@ from sklearn.model_selection import train_test_split
 
 from preprocessing import Preprocessing
 
-
+# Define a class named Read_data
 class Read_data():
 
 	def get_data(self):
@@ -51,6 +51,7 @@ class Read_data():
 
 		return data
 
+	# split teh data for k cross validation
 	def train_test_data(self):
 
 		a = Args()
@@ -73,6 +74,7 @@ class Read_data():
 
 		return X_train, X_test, y_train, y_test
 
+	# tokenise the data if needed
 	def tokenise(self, max_len):
 
 		# get values
@@ -102,6 +104,7 @@ class Read_data():
 
 		return data
 
+	# change file paths for articles dataset
 	def get_articles(self):
 
 		a = Args()
@@ -125,6 +128,7 @@ class Read_data():
 
 		return data
 
+	# change file paths for headlines dataset
 	def get_titles(self):
 		
 		a = Args()
@@ -215,7 +219,7 @@ class Read_data():
 
 		return textt
 
-
+	# return the dictionary with all the unique words in the dataset
 	def prepare_data(self):
 
 		text = self.get_data()
@@ -228,10 +232,8 @@ class Read_data():
 		word2idx = dict()
 
 		# iterate through the entire corpus to create the list of words
-		#for index, row in text.items():
 		for row in text:
 
-			#print(row)
 			row = row.split()
 
 			for word in row:
@@ -253,14 +255,12 @@ class Read_data():
 		text = text['tokenised']
 
 		# iterate through the entire corpus to create the list of words
-		#for index, row in text.items():
 		for row in text:
 
-			#print(row)
 			row = row.split()
 
 			for word in row:
-				#if word not in word_list:
+
 				word_list.append(word)
 
 		return word_list

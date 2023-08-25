@@ -36,13 +36,13 @@ from read_data import Read_data
 
 from datetime import datetime
 
-
 # import packages
 import argparse
 from arguments import Args
 
 import joblib
 
+# Define a class named Training
 class Training():
 
 	def train_sk(self):
