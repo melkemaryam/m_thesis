@@ -24,7 +24,7 @@ Table of Contents:
 
 This section describes all necessary steps to create the correct working environment that ensures the functionality of this framework.
 
-It is recommended to first create a virtual environment, so that already existing systems or data on a device are not disturbed. The following steps need to be taken in order to estblish the right environment for the classifier. It is expected that the latest version of Python 3.8 is already installed, together with pip.
+It is recommended to first create a virtual environment so that already existing systems or data on a device are not disturbed. The following steps need to be taken to estblish the right environment for the classifier. It is expected that the latest version of Python 3.8 is already installed, together with pip.
 
 ### 1. Install Virtualenv:
 
@@ -90,7 +90,7 @@ $ pip install tensorflow # or tensorflow-gpu
 
 ### Note:
 
-A virtual environment is not necessary in order to run the framework, however, it is recommended in order to protect the data and devices.
+A virtual environment is not necessary to run the framework, however, it is recommended to protect the data and devices.
 
 If working without a virtual environment, please make sure that all necessary libraries are installed. If not, install them as follows:
 
@@ -112,12 +112,12 @@ $ pip3 install joblib
 $ pip3 install tensorflow # or tensorflow-gpu
 ```
 
-It is essential that all these packages are installed before running the classifier, so that no errors occur.
+All these packages must be installed before running the classifier so that no errors occur.
 
 ## The Dataset
 The directory `info` contains the partial dataset that is used to train and test the classifier. The important files are:
 
-* `titles_with_labels.csv`: This stores all news headlines with the four labels plus the aggregated label. The preprocessed text is also included, which is used for training purposes. Unfortunately, the articles dataset is too big to be uploaded here.
+* `titles_with_labels.csv`: This stores all news headlines with the four labels plus the aggregated label. The preprocessed text is also included, which is used for training purposes. Unfortunately, the article dataset is too big to be uploaded here.
 * `abcnews_date_text.csv`: This stores the Australian news headlines used for predictions.
 
 The structure of the dataset is simple to support further extensions. The file `labels.csv` includes the information about the three possible sentiment classes: 
@@ -130,7 +130,7 @@ Each news headline is only labelled as one of these sentiments.
 
 ## The Framework
 
-The directory `framework` will offer the neccessary functions and methods needed in order to build, train, test, and optimise the different models.
+The directory `framework` will offer the necessary functions and methods needed to build, train, test, and optimise the different models.
 
 The framework can be used by specifying the intentions through the arguments in the Terminal. The files are created in an object-oriented structure to establish a clear infrastructure. The files work as follows:
 
@@ -171,7 +171,7 @@ The predicted news headlines will be loaded into the folder `predictions` into s
 
 ## Run the Framework
 
-In order to run the framework successfully, several steps need to be included.
+To run the framework successfully, several steps need to be included.
 
 ### 1. Start Virtual Environment (if necessary)
 
@@ -187,7 +187,7 @@ $ cd m_thesis/framework
 ```
 
 ### 3. Specify arguments:
-There are 8 arguments that need to  be added when running the code. The `class Args()` can be seen in `arguments.py`. 
+8 arguments need to be added when running the code. The `class Args()` can be seen in `arguments.py`. 
 
 The main structure of a command is as follows:
 
@@ -200,8 +200,8 @@ where all arguments are optional. The arguments are described below:
 * `-v` or `--vector` to specify which type of vectoriser to use when implementing an SK model,
 * `-op` or `--optimiser` to add the optimisation methods to use, can be either `bayesian`, `random`, or `hyperband`,
 * `-inop` or `--inner_optimiser` to add the inner optimisation method, can be either `adam`, `sgd`, or `rms`,
-* `-d`or `--dataset` to add whether the model should be trained on `titles` or `articles`; the default is `titles`, as the articles are too complex and the actual dataset cannot be included in this repository,
-* `-pre`or `--preprocessing` to specify whether the dataset needs to be preprocessed first; the default is no,
+* `-d` or `--dataset` to add whether the model should be trained on `titles` or `articles`; the default is `titles`, as the articles are too complex and the actual dataset cannot be included in this repository,
+* `-pre` or `--preprocessing` to specify whether the dataset needs to be preprocessed first; the default is no,
 * `-tr` or `--train` to indicate whether the hyperparameters should be optimised during the training process or not, or to skip the training entirely to just predict labels, can be either `all`, `none`, or `pred`,
 * `-pa` or `--path` to add the path to the output model.
 
@@ -217,7 +217,7 @@ $ python3 main.py -m rnn -inop adam -d titles -tr none -pa ../output/rnn.model
 
 When optimising the neural network, add the `optimiser` argument as shown below and change `-tr` to `all`.
 
-Note: the `main.py` file includes example commands for easy access.
+Note: The `main.py` file includes example commands for easy access.
 
 ### 5. Run optimisations
 
@@ -251,7 +251,7 @@ Make sure to always provide the correct model path in combination with the corre
 
 ### 6. Run predictions only
 
-If there is already a fully trained and optimised model that is saved on a specific path, the trianing process can be skipped, by directly using the collision-aware contact classifier to predict labels of provided images.
+If there is already a fully trained and optimised model that is saved on a specific path, the training process can be skipped, by directly using the collision-aware contact classifier to predict labels of provided images.
 
 As the classifier is the main product of the framework, this is the default setting. Hence, by writing 
 
@@ -270,6 +270,16 @@ python3 main.py -tr none
 
 #### Note: 
 The fully trained models can only be used in the environment they were first created. If loading a model that has been trained in a different environment, an error might occur.
+
+### 7. Run SK models
+
+When running a model using the scikit-learn libraries it is important to note that their infrastructure differs from the simple TF models, as a specific vectoriser needs to be specified in the arguments now. The below command trains a Logistic Regression model using a CountVectorizer.
+
+```
+$ python3 main.py -m log -v count -d titles -tr none -pa ../output/log_count.model
+```
+
+It is important to note that the hyperparameter optimisation methods do not apply to the SK models, thus the argument `-tr` always needs to be set to `none`. Additionally, the experiments showed that the Word2Vec models stopped performing on datasets larger than a few 1000 entries. It is recommended to use the `w2v` vectoriser only for a small dataset, which will then not lead to good accuracy. If the size of the dataset needs to be adjusted, please change it in the function `get_data()` in the file `read_data.py`. Moreover, as the predictions are mostly geared towards the TF models, it is recommended to apply the prediction process only to TF models.
 
 ## Results
 
@@ -291,7 +301,7 @@ python3 main.py -m skip -pa ../output/skip.model
 
 ### Jupyter Notebooks
 
-The repository also includes a variety of Jupyter Notebooks that were run on Google Colab to access their GPUs due to the needed computing units to train the DistilBERT models. Thus, in order to run the DistilBERT models, the `bert.ipynb` file in the `framework` directory can be opened. If further insights into the labelling process are wanted, the file `label_comparison.ipynb` in the `info` directory can be executed.
+The repository also includes a variety of Jupyter Notebooks that were run on Google Colab to access their GPUs due to the needed computing units to train the DistilBERT models. Thus, to run the DistilBERT models, the `bert.ipynb` file in the `framework` directory can be opened. If further insights into the labelling process are wanted, the file `label_comparison.ipynb` in the `info` directory can be executed.
 
 ## GitHub Repository
 

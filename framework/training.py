@@ -30,7 +30,6 @@ print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 from preprocessing import Preprocessing
 from helper import Helper
 from build_sk import Build_sk
-from tuning import Tuning
 from build_tf import Build_tf
 from read_data import Read_data
 
@@ -91,7 +90,6 @@ class Training():
 		re = Read_data()
 		h = Helper()
 		b = Build_tf(None)
-		t = Tuning(None)
 		arg = Args()
 		args = arg.parse_arguments()
 
@@ -100,8 +98,6 @@ class Training():
 		X_train, X_test, y_train, y_test, tok = re.tokenise(MAX_LENGTH)
 		print(X_train.shape,y_train.shape)
 		print(X_test.shape,y_test.shape)
-
-		best_hyperparameters = t.get_best_parameters()
 
 		# train the network
 		print("[INFO] training network...")

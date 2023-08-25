@@ -11,7 +11,6 @@ purpose:
 from arguments import Args
 from build_sk import Build_sk
 from build_tf import Build_tf
-from tuning import Tuning
 from training import Training
 from read_data import Read_data
 from preprocessing import Preprocessing
@@ -34,7 +33,6 @@ if __name__ == '__main__':
 		# create objects of all classes
 		sk = Build_sk(None)
 		bu = Build_tf(None)
-		tu = Tuning(None)
 		tr = Training()
 		re = Read_data()
 		prep = Preprocessing()
@@ -105,4 +103,4 @@ if __name__ == '__main__':
 
 # rnn with optimisation: python3 main.py -m rnn -op hyperband -d titles -tr all -pa ../output/hyperband_rnn.model
 # cnn with optimisation: python3 main.py -m cnn -op bayesian -d titles -tr all -pa ../output/bayesian_cnn.model
-# lstm with optimisation: python3 main.py -m lstm -op random -d titles -tr all -pa ../output/hyperband_lstm.model
+# lstm with optimisation: python3 main.py -m lstm -op random -d titles -tr all -pa ../output/random_lstm.model
