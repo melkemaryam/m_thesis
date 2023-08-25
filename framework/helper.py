@@ -102,7 +102,7 @@ class Helper():
 	# return the three lables for predictions
 	def get_labels(self):
 		
-		# load sign names
+		# load labels
 		labels = open("labels.csv").read().strip().split("\n")[1:]
 		labels = [s.split(";")[1] for s in labels]
 
