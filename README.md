@@ -24,7 +24,7 @@ Table of Contents:
 
 This section describes all necessary steps to create the correct working environment that ensures the functionality of this framework.
 
-It is recommended to first create a virtual environment so that already existing systems or data on a device are not disturbed. The following steps need to be taken to estblish the right environment for the classifier. It is expected that the latest version of Python 3.8 is already installed, together with pip.
+It is recommended to first create a virtual environment so that already existing systems or data on a device are not disturbed. The following steps need to be taken to establish the right environment for the classifier. It is expected that the latest version of Python 3.8 is already installed, together with pip.
 
 ### 1. Install Virtualenv:
 
