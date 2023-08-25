@@ -171,6 +171,8 @@ The predicted news headlines will be loaded into the folder `predictions` into s
 
 ## Run the Framework
 
+The first step is to change file paths for the datasets in all necessary files. In this case, please adjust the `read_data.py` file and the `predicting.py` file, so it properly depicts the correct paths.
+
 To run the framework successfully, several steps need to be included.
 
 ### 1. Start Virtual Environment (if necessary)
