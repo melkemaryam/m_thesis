@@ -142,8 +142,8 @@ The framework can be used by specifying the intentions through the arguments in 
 * `hyperband.py`: optimise the classifier with Hyperband Optimisation,
 * `inner_opt.py`: establish the inner optimisation method,
 * `main.py`: run the framework as commanded through the Terminal,
-* `predicting.py`: predict the labels of new images,
-* `preprocessing.py`: preprocess the text and prepare them for the training, testing, or prediction processes if necessary,
+* `predicting.py`: predict the labels of new news headlines,
+* `preprocessing.py`: preprocess the text and prepare it for the training, testing, or prediction processes if necessary,
 * `randoms.py`: optimise the classifier with Random Search Optimisation,
 * `read_data.py`: prepare the data to be used in further processes,
 * `skip.py`: create a Skip-gram model to analyse word similarities,
@@ -204,7 +204,7 @@ where all arguments are optional. The arguments are described below:
 * `-inop` or `--inner_optimiser` to add the inner optimisation method, can be either `adam`, `sgd`, or `rms`,
 * `-d` or `--dataset` to add whether the model should be trained on `titles` or `articles`; the default is `titles`, as the articles are too complex and the actual dataset cannot be included in this repository,
 * `-pre` or `--preprocessing` to specify whether the dataset needs to be preprocessed first; the default is no,
-* `-tr` or `--train` to indicate whether the hyperparameters should be optimised during the training process or not, or to skip the training entirely to just predict labels, can be either `all`, `none`, or `pred`,
+* `-tr` or `--train` to indicate whether the hyperparameters should be optimised during the training process or not, or to skip the training entirely just to predict labels, can be either `all`, `none`, or `pred`,
 * `-pa` or `--path` to add the path to the output model.
 
 ### 4. Run command in the Terminal
