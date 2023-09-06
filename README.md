@@ -249,18 +249,18 @@ This command will train, test, and optimise a model by tuning all hyperparameter
 $ python3 main.py -m lstm -op random -d titles -tr all -pa ../output/random_lstm.model
 ```
 
-Make sure to always provide the correct model path in combination with the correct optimiser and model to avoid any confusion.
+Make sure always to provide the correct model path in combination with the correct optimiser and model to avoid any confusion.
 
 ### 6. Run predictions only
 
-If there is already a fully trained and optimised model that is saved on a specific path, the training process can be skipped, by directly using the collision-aware contact classifier to predict labels of provided images.
+If there is already a fully trained and optimised model that is saved on a specific path, the training process can be skipped, by directly using the sentiment-aware news classifier to predict labels of provided news content.
 
 As the classifier is the main product of the framework, this is the default setting. Hence, by writing 
 
 ```
 $ python3 main.py
 ```
-into the Terminal, it will use the default model, in this case, the RNN model, which achieves 86.0% accuracy. The framework already provides a directory with sample images that can be used as a new dataset for predictions.
+into the Terminal, it will use the default model, in this case, the RNN model, which achieves 86.0% accuracy. The framework already provides a file with sample news headlines that can be used as a new prediction dataset.
 
 This will save the predicted news headline labels in the separate `predictions` folder.
 
